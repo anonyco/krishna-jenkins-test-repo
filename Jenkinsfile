@@ -11,7 +11,7 @@ pipeline {
         stage('clone') {
             steps {
 		dir("/app/repos") {
-			folder_state = sh(script: "test -d ${params.BRANCH_NAME} && echo '1' || echo '0', returnStdout: true").trim()
+			folder_state = sh(script: "test -d ${params.BRANCH_NAME} && echo '1' || echo '0', returnStdout: true")
 			if (folder_state==0) {
 				echo "new Branch, cloning it now"
 			}

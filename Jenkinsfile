@@ -10,6 +10,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
+		sh "ls /root/repos/"
 		dir ("/root/repos/${BRANCH_NAME}"){
                     sh './gradlew build'
 		}

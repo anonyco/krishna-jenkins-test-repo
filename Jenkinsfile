@@ -1,8 +1,8 @@
 pipeline {
     agent { docker { 
-		image 'gradle:7.4.2-jdk11-alpine' 
+		image 'gradle:7.4.2-jdk11-alpine'
 		args '-v /home/jack/code/krishna_git/build-server/repos:/repos:rw'
-		} 
+		}
 	}
     parameters {
         gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH_NAME', type: 'PT_BRANCH'
@@ -10,6 +10,9 @@ pipeline {
     stages {
         stage('clone') {
             steps {
+		script {
+		sh "ls -aslh / && id"
+		}
 		dir("/repos") {
 			script {
 			folder_state = sh(script: "test -d ${params.BRANCH_NAME} && echo '1' || echo '0', returnStdout: true")

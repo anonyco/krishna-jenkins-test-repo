@@ -1,7 +1,7 @@
 pipeline {
     agent { docker { 
 		image 'gradle:7.4.2-jdk11-alpine' 
-		args '-v /home/jack/code/krishna_git/build-server/repos:/app/repos:rw'
+		args '-v /home/jack/code/krishna_git/build-server/repos:/repos:rw'
 		} 
 	}
     parameters {
@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('clone') {
             steps {
-		dir("/app/repos") {
+		dir("/repos") {
 			script {
 			folder_state = sh(script: "test -d ${params.BRANCH_NAME} && echo '1' || echo '0', returnStdout: true")
 			if (folder_state=='0') {
@@ -22,8 +22,8 @@ pipeline {
         }
         stage('build') {
             steps {
-                sh "ls /app/repos/"
-                dir ("/app/repos/${BRANCH_NAME}"){
+                sh "ls /repos/"
+                dir ("/repos/${BRANCH_NAME}"){
                     sh './gradlew build'
                 }
             }

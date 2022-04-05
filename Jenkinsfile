@@ -8,12 +8,22 @@ pipeline {
         gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH_NAME', type: 'PT_BRANCH'
     }
     stages {
+        stage('clone') {
+            steps {
+		dir("/app/repos) {
+			folder_state = sh(script: "test -d ${params.BRANCH_NAME} && echo '1' || echo '0', returnStdout: true").trim()
+			if (folder_state==0) {
+				echo "new Branch, cloning it now"
+			}
+		}
+            }
+        }
         stage('build') {
             steps {
-		sh "ls /app/repos/"
-		dir ("/app/repos/${BRANCH_NAME}"){
+                sh "ls /app/repos/"
+                dir ("/app/repos/${BRANCH_NAME}"){
                     sh './gradlew build'
-		}
+                }
             }
         }
     }

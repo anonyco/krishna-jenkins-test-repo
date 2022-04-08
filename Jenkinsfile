@@ -13,7 +13,6 @@ pipeline {
 		script {
 sh "ls -aslh"
 		sh "ln -sf /repos repos && ls -aslh"
-sleep 600
 		}
 		dir("repos/") {
 			script {
@@ -21,7 +20,6 @@ sh "ls -aslh"
     if (fileExists("${params.BRANCH_NAME}")) {
         echo "Folder found, not cloning again but rather pulling latest code on the branch"
 dir("repo/${params.BRANCH_NAME}") {
-sleep 600
 sh "git pull"
 }
 
@@ -45,4 +43,6 @@ withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_C
             }
         }
     }
+
+
 }

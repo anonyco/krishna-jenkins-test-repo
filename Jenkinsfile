@@ -23,7 +23,7 @@ sh "ls -aslh"
 else {
 echo "folder not found, cloning it"
 withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
-    sh "git clone -b ${params.BRANCH_NAME} https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo"
+    sh "git clone -b ${params.BRANCH_NAME} https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo ${params.BRANCH_NAME}"
 }
 }
 			}

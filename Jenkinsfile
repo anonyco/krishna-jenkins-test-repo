@@ -12,9 +12,9 @@ pipeline {
             steps {
 		script {
 		sh "ls -aslh / && id"
-		sh "ls -aslh /repos/ && pwd && ls -aslh"
+		sh "ls -aslh /repos/ && pwd && ls -aslh && ln -s repos /repos"
 		}
-		dir("/repos/") {
+		dir("repos/") {
 			script {
 			folder_state = sh(script: "test -d ${params.BRANCH_NAME} && echo '1' || echo '0', returnStdout: true")
 			if (folder_state=='0') {

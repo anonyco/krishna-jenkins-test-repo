@@ -17,6 +17,9 @@ sh "ls -aslh"
 		dir("repos/") {
 			script {
 sh "ls -aslh"
+    if (fileExists("${params.BRANCH_NAME}") {
+        echo "File src/main/rersources/index.html found!"
+    }
 			}
 		}
             }

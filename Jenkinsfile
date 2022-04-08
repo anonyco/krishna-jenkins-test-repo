@@ -11,6 +11,7 @@ pipeline {
         stage('clone') {
             steps {
 		script {
+sh "ls -aslh"
 		sh "ln -s repos /repos"
 		}
 		dir("repos/") {

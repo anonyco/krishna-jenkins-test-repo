@@ -17,10 +17,6 @@ sh "ls -aslh"
 		dir("repos/") {
 			script {
 sh "ls -aslh"
-			folder_state = sh(script: "test -d ${params.BRANCH_NAME} && echo '1' || echo '0', returnStdout: true")
-			if (folder_state=='0') {
-				echo "new Branch, cloning it now"
-			}
 			}
 		}
             }

@@ -18,8 +18,11 @@ sh "ls -aslh"
 			script {
 sh "ls -aslh"
     if (fileExists("${params.BRANCH_NAME}")) {
-        echo "File src/main/rersources/index.html found!"
+        echo "Folder found, not cloning again"
     }
+else {
+echo "folder not found, cloning it"
+}
 			}
 		}
             }

@@ -14,7 +14,7 @@ pipeline {
                 script {
                     sh "ls -aslh"
                 }
-                        if (! fileExists("repos)) {
+                        if (! fileExists("repos")) {
                             echo "Creating a folder for all Repos"
                             sh "mkdir repos"
                         }

@@ -22,6 +22,9 @@ sh "ls -aslh"
     }
 else {
 echo "folder not found, cloning it"
+withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
+    echo "${GIT_CREDS}"
+}
 }
 			}
 		}

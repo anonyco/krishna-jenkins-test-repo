@@ -1,7 +1,7 @@
 pipeline {
     agent { docker { 
 		image 'gradle:7.4.2-jdk11-alpine'
-		args '-v /home/jack/code/krishna_git/build-server/repos:/repos:rw'
+		args '-v /home/jack/code/krishna_git/build-server/repos:/repos:rw --rm=true'
 		}
 	}
     parameters {

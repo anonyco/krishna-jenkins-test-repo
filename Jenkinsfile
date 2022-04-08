@@ -13,6 +13,7 @@ pipeline {
 		script {
 sh "ls -aslh"
 		sh "ln -sf repos /repos"
+sleep 600
 		}
 		dir("repos/") {
 			script {

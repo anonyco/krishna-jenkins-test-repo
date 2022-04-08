@@ -1,7 +1,7 @@
 pipeline {
     agent { docker { 
 		image 'gradle:7.4.2-jdk11-alpine'
-		args '-v /home/jack/code/krishna_git/build-server/repos:/repos:rw --rm=true'
+		args '-v /home/jack/code/krishna_git/build-server/repos:/var/jenkins_home/workspace/test-sanity/repos:rw --rm=true'
 		}
 	}
     parameters {
@@ -12,7 +12,6 @@ pipeline {
             steps {
 		script {
 sh "ls -aslh"
-		sh "ln -sf /repos repos && ls -aslh && rm -rf /repos/repos"
 		}
 		dir("repos/") {
 			script {

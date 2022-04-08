@@ -24,6 +24,7 @@ pipeline {
                         sh "ls -aslh && printenv"
                         if (fileExists("${params.BRANCH_NAME}")) {
                             echo "Folder found, not cloning again"
+                            sleep 600
                         }
                         else {
                             echo "folder not found, cloning it"

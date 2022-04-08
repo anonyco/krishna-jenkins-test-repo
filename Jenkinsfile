@@ -18,7 +18,11 @@ sh "ls -aslh"
 			script {
 sh "ls -aslh"
     if (fileExists("${params.BRANCH_NAME}")) {
-        echo "Folder found, not cloning again"
+        echo "Folder found, not cloning again but rather pulling latest code on the branch"
+dir("repo/${params.BRANCH_NAME}") {
+sh "git pull"
+}
+
     }
 else {
 echo "folder not found, cloning it"

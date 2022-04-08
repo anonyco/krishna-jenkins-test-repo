@@ -12,7 +12,8 @@ pipeline {
             steps {
 		script {
 sh "ls -aslh"
-		sh "ln -sf /repos repos"
+		sh "ln -sf /repos repos && ls -aslh"
+sleep 600
 		}
 		dir("repos/") {
 			script {

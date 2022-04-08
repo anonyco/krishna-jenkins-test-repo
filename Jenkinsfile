@@ -16,7 +16,7 @@ sh "ls -aslh"
 		dir("repos/") {
 			script {
 sh "ls -aslh && printenv"
-    if (fileExists("${env.WORKSPACE}/repos/${params.BRANCH_NAME}")) {
+    if (fileExists("${env.WORKSPACE}/repos/branch2")) {
         echo "Folder found, not cloning again but rather pulling latest code on the branch"
 dir("repos/${params.BRANCH_NAME}") {
 sh "git pull"

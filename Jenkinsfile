@@ -13,13 +13,13 @@ pipeline {
             steps {
                 script {
                     sh "ls -aslh"
-                        if (! fileExists("repos")) {
+                        if (! fileExists("${env.WORKSPACE}/repos")) {
                             echo "Creating a folder for all Repos"
-                            sh "mkdir repos"
+                            sh "mkdir \"$WORKSPACE/repos\""
                         }
                 }
 
-                dir("repos/") {
+                dir("${env.WORKSPACE}/repos/") {
                     script {
                         sh "ls -aslh && printenv"
                         if (fileExists("${params.BRANCH_NAME}")) {
@@ -40,7 +40,7 @@ pipeline {
             steps {
                 sh "ls -aslh repos/"
                 sleep 600
-                dir ("repos/${BRANCH_NAME}"){
+                dir ("${env.WORKSPACE}/repos/${BRANCH_NAME}"){
                     sh './gradlew build'
                 }
             }

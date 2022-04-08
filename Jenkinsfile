@@ -40,7 +40,6 @@ pipeline {
         stage('build') {
             steps {
                 sh "ls -aslh repos/"
-                sleep 600
                 dir ("${env.WORKSPACE}/repos/${BRANCH_NAME}"){
                     sh './gradlew build'
                 }

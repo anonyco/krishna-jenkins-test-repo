@@ -16,19 +16,15 @@ sh "ls -aslh"
 		dir("repos/") {
 			script {
 sh "ls -aslh && printenv"
-    if (fileExists("${env.WORKSPACE}/repos/branch2")) {
-        echo "Folder found, not cloning again but rather pulling latest code on the branch"
-dir("repos/${params.BRANCH_NAME}") {
-sh "git pull"
-}
-
+    if (fileExists("${params.BRANCH_NAME}")) {
+        echo "Folder found, not cloning again"
     }
 else {
 echo "folder not found, cloning it"
 withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
     sh "git clone -b ${params.BRANCH_NAME} https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo ${params.BRANCH_NAME}"
 }
-}
+
 			}
 		}
             }

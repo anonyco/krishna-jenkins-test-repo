@@ -23,8 +23,12 @@ pipeline {
                     script {
                         sh "ls -aslh && printenv"
                         if (fileExists("${params.BRANCH_NAME}")) {
-                            echo "Folder found, not cloning again"
+                            echo "Folder found, not cloning again, but instead pull the latest code"
                             sleep 600
+			    dir("${env.WORKSPACE}/repos/${params.BRANCH_NAME}") {
+				sh "git checkout origin/${params.BRANCH_NAME}"
+				sh "git pull"
+			    }
                         }
                         else {
                             echo "folder not found, cloning it"

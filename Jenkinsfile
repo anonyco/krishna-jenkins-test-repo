@@ -12,7 +12,7 @@ pipeline {
             steps {
 		script {
 sh "ls -aslh"
-		sh "ln -s repos /repos"
+		sh "ln -sf repos /repos"
 		}
 		dir("repos/") {
 			script {

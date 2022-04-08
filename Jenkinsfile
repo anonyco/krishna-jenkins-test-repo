@@ -36,7 +36,8 @@ withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_C
         }
         stage('build') {
             steps {
-                sh "ls /repos/"
+                sh "ls -aslh /repos/"
+sleep 600
                 dir ("repos/${BRANCH_NAME}"){
                     sh './gradlew build'
                 }

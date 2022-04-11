@@ -3,7 +3,6 @@ pipeline {
         docker {
             image 'gradle:7.4.2-jdk11-alpine'
             args '--rm=true'
-	    customWorkspace "/var/jenkins_home/workspace/test-jenkins/"
         }
     }
     parameters {
@@ -21,6 +20,7 @@ pipeline {
                 }
 
                 dir("${env.WORKSPACE}/repos/") {
+ws("/var/jenkins_home/workspace/test-jenkins/"){
                     script {
                         sh "ls -aslh && printenv"
                         if (fileExists("${params.BRANCH_NAME}")) {
@@ -39,6 +39,7 @@ pipeline {
 
                         }
                     }
+}
                 }
             }
         }

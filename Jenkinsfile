@@ -2,7 +2,7 @@ pipeline {
     agent { 
         docker {
             image 'gradle:7.4.2-jdk11-alpine'
-            args '-v --rm=true'
+            args '--rm=true'
         }
     }
     parameters {

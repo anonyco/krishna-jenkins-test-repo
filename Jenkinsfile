@@ -2,7 +2,8 @@ pipeline {
     agent { 
         docker {
             image 'gradle:7.4.2-jdk11-alpine'
-            args '--rm=true'
+            args '-v /home/jack/code/krishna_git/build-server/repos:/custom_workspace:rw --rm=true'
+	    customWorkspace '/custom_workspace'
         }
     }
     parameters {

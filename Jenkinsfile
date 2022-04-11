@@ -3,7 +3,7 @@ pipeline {
         docker {
             image 'gradle:7.4.2-jdk11-alpine'
             args '--rm=true'
-	    customWorkspace "/var/jenkins_home/workspace/${env.JOB_NAME}/"
+	    customWorkspace "/var/jenkins_home/workspace/test-jenkins/"
         }
     }
     parameters {

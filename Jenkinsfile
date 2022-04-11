@@ -47,7 +47,9 @@ ws("/var/jenkins_home/workspace/test-jenkins/"){
             steps {
                 sh "ls -aslh repos/"
                 dir ("${env.WORKSPACE}/repos/${BRANCH_NAME}"){
+ws("/va /jenkins_home/workspace/test-jenkins/repos/${BRANCH_NAME}"){
                     sh './gradlew build'
+}
                 }
             }
         }

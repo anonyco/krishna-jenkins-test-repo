@@ -26,7 +26,7 @@ pipeline {
                             echo "Folder found, not cloning again, but instead pull the latest code"
 			    dir("${env.WORKSPACE}/repos/${params.BRANCH_NAME}") {
 				sh "git reset --hard origin/${params.BRANCH_NAME}"
-				sh "git pull"
+				sh "git pull origin ${params.BRANCH_NAME}"
 			    }
                         }
                         else {

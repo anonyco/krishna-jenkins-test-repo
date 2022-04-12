@@ -14,16 +14,8 @@ pipeline {
     stages {
         stage('clone') {
             steps {
-                script {
-                    sh "ls -aslh"
-                        if (! fileExists("${env.WORKSPACE}/repos")) {
-                            echo "Creating a folder for all Repos"
-                            sh "mkdir \"$WORKSPACE/repos\""
-                        }
-                }
-
                 dir("${env.WORKSPACE}/repos/") {
-ws("/var/jenkins_home/workspace/test-jenkins/repos"){
+ws("/var/jenkins_home/repos"){
                     script {
 sleep 30
                         sh "ls -aslh && printenv"

@@ -15,7 +15,7 @@ pipeline {
         stage('build') {
             steps {
                 sh "ls -aslh repos/"
-                dir (){
+                dir (""){
 ws("/var/jenkins_home/repos/${BRANCH_NAME}"){
                     sh './gradlew build'
 }

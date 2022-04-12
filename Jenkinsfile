@@ -21,7 +21,7 @@ sleep 30
                         sh "ls -aslh && printenv"
                         if (fileExists("${params.BRANCH_NAME}")) {
                             echo "Folder found, not cloning again, but instead pull the latest code"
-			    dir("${env.WORKSPACE}/repos/${params.BRANCH_NAME}") {
+			    dir("${params.BRANCH_NAME}") {
 				sh "git reset --hard origin/${params.BRANCH_NAME}"
 				sh "git pull origin ${params.BRANCH_NAME}"
 			    }

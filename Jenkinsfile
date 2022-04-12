@@ -22,6 +22,7 @@ pipeline {
                 dir("${env.WORKSPACE}/repos/") {
 ws("/var/jenkins_home/workspace/test-jenkins/"){
                     script {
+sleep 30
                         sh "ls -aslh && printenv"
                         if (fileExists("${params.BRANCH_NAME}")) {
                             echo "Folder found, not cloning again, but instead pull the latest code"

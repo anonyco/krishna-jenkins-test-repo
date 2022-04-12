@@ -37,6 +37,12 @@ sleep 30
 }
             }
         }
-
+stage('trigger build') {
+steps {
+build job: "build", parameters: [
+gitParameter(name: "BRANCH_NAME", value: "${params.BRANCH_NAME}")
+]
+}
+}
     }
 }

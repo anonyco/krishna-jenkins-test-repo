@@ -14,7 +14,6 @@ pipeline {
     stages {
         stage('clone') {
             steps {
-                dir("${env.WORKSPACE}/repos/") {
 ws("/var/jenkins_home/repos"){
                     script {
 sleep 30
@@ -36,7 +35,6 @@ sleep 30
                         }
                     }
 }
-                }
             }
         }
     }

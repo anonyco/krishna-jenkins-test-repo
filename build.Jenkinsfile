@@ -1,5 +1,5 @@
 pipeline {
-    agent { 
+    agent {
         docker {
             image 'gradle:7.4.2-jdk11-alpine'
             args '--rm=true'
@@ -14,10 +14,8 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                dir (""){
-ws("/var/jenkins_home/repos/${BRANCH_NAME}"){
+                ws("/var/jenkins_home/repos/${BRANCH_NAME}"){
                     sh './gradlew build'
-}
                 }
             }
         }

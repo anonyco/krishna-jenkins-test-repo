@@ -5,6 +5,9 @@ pipeline {
             args '--rm=true'
         }
     }
+    options {
+        lock resource: 'git_cloner'
+    }
     parameters {
         gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH_NAME', type: 'PT_BRANCH'
     }

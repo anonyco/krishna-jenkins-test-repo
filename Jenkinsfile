@@ -6,7 +6,7 @@ pipeline {
         }
     }
     options {
-	lock(extra: [[resource: 'git_cloner'], [resource: "git_${params.BRANCH_NAME}"]])
+	lock(extra: [[resource: 'jenkins_git_cloner'], [resource: "jenkins_pipeline_${params.BRANCH_NAME}"]])
     }
     parameters {
         gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH_NAME', type: 'PT_BRANCH'
@@ -37,5 +37,6 @@ sleep 30
 }
             }
         }
+
     }
 }

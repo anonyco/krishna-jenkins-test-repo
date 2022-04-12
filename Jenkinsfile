@@ -6,7 +6,7 @@ pipeline {
         }
     }
     options {
-        lock resource: 'git_cloner'
+	lock(extra: [[resource: 'git_cloner'], [resource: "git_${params.BRANCH_NAME}"]])
     }
     parameters {
         gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH_NAME', type: 'PT_BRANCH'

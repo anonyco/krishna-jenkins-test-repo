@@ -23,7 +23,7 @@ pipeline {
                 }
 
                 dir("${env.WORKSPACE}/repos/") {
-ws("/var/jenkins_home/workspace/test-jenkins/"){
+ws("/var/jenkins_home/workspace/test-jenkins/repos"){
                     script {
 sleep 30
                         sh "ls -aslh && printenv"

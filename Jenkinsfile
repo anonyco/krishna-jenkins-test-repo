@@ -19,8 +19,10 @@ ws("/var/jenkins_home/repos"){
                         if (fileExists("${params.BRANCH_NAME}")) {
                             echo "Folder found, not cloning again, but instead pull the latest code"
 			    dir("${params.BRANCH_NAME}") {
+retry(2) {
 				sh "git reset --hard origin/${params.BRANCH_NAME}"
 				sh "git pull origin ${params.BRANCH_NAME}"
+}
 			    }
                         }
                         else {

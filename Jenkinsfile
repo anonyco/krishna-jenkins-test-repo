@@ -16,8 +16,6 @@ pipeline {
             steps {
 ws("/var/jenkins_home/repos"){
                     script {
-sleep 30
-                        sh "ls -aslh && printenv"
                         if (fileExists("${params.BRANCH_NAME}")) {
                             echo "Folder found, not cloning again, but instead pull the latest code"
 			    dir("${params.BRANCH_NAME}") {
@@ -28,7 +26,6 @@ sleep 30
                         else {
                             echo "folder not found, cloning it"
                             withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
-				sh "id && ls -aslh && pwd"
                                 sh "git clone -b ${params.BRANCH_NAME} https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo ${params.BRANCH_NAME}"
                             }
 

@@ -39,9 +39,10 @@ sleep 30
         }
 stage('trigger build') {
 steps {
-build job: "build", parameters: [
+build job: "build", propagate: false, wait: false, parameters: [
 gitParameter(name: "BRANCH_NAME", value: "${params.BRANCH_NAME}")
 ]
+
 }
 }
     }

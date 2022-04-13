@@ -34,7 +34,7 @@ pipeline {
 			sh "printenv"
 			dir("${params.BRANCH_NAME}") {
 			commiter= sh(script: "git show -s --format='%ae' ${env.GIT_COMMIT}", returnStdout: true).trim()
-			echo ${commiter}
+			echo "${commiter}"
 			}
                     }
                 }

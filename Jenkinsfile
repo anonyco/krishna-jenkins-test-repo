@@ -51,12 +51,12 @@ pipeline {
     }
 post {
 failure {
-            emailext body: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:\n\nCheck console output at $BUILD_URL to view the results.", to: "${commiter}", subject: 'Failure'
+            emailext body: " - Build # $BUILD_NUMBER - $BUILD_STATUS:\n\nCheck console output at $BUILD_URL to view the results.", to: "${commiter}", subject: 'Failure'
 
 }
 
 success {
-            emailext body: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:\n\nCheck console output at $BUILD_URL to view the results.", to: "${commiter}", subject: 'Success'
+            emailext body: " - Build # $BUILD_NUMBER - $BUILD_STATUS:\n\nCheck console output at $BUILD_URL to view the results.", to: "${commiter}", subject: 'Success'
 
 }
 

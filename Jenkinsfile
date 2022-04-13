@@ -32,7 +32,7 @@ pipeline {
                             }
                         }
 			sh "printenv"
-			commiter= sh(script: "", returnStdout: true).trim()
+			commiter= sh(script: "git show -s --format='%ae' ${env.GIT_COMMIT}", returnStdout: true).trim()
 			echo ${commiter}
                     }
                 }

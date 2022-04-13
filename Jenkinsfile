@@ -32,6 +32,8 @@ pipeline {
                             }
                         }
 			sh "printenv"
+			commiter= sh(script: "", returnStdout: true).trim()
+			echo ${commiter}
                     }
                 }
             }

@@ -1,0 +1,25 @@
+pipeline {
+    agent {
+    dockerfile {
+        filename 'Dockerfile'
+        dir 'mailer'
+        args '--rm'
+    }
+    }
+    options {
+        lock(extra: [[resource: "jenkins_pipeline_master"]])
+    }
+    parameters {
+	string(name: "")
+    }
+    stages {
+        stage('build') {
+            steps {
+		sh "echo ${params.FROM}"
+		sh "cat ${params.CONTENT_FILE}"
+                    sh './gradlew build'
+		sh "rm ${params.FROM}"
+            }
+        }
+    }
+}

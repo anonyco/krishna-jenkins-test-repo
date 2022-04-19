@@ -11,7 +11,7 @@ pipeline {
     }
 
 environment {
-MAIL_CONFIG = credentials(smtp)
+MAIL_CONFIG = credentials('smtp')
 }
     stages {
         stage('build') {

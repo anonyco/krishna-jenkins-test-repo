@@ -13,7 +13,7 @@ pipeline {
             steps {
 dir('mailer') {
                 script {
-                    sh "./mailer.sh"
+                    sh "./mailer.sh ${env.MAIL_CONFIG}"
                 }
 }
             }

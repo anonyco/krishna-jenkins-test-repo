@@ -3,6 +3,7 @@
 if [[ $# -lt 1 ]]
 then
   echo "Usage: $0 <smtp file>"
+  exit 1
 fi
 
 SMTP_FILE=$1

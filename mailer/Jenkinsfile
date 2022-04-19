@@ -1,9 +1,13 @@
 pipeline {
     agent {
-    dockerfile {
-        filename 'Dockerfile'
-        dir 'mailer'
+        dockerfile {
+            filename 'Dockerfile'
+            dir 'mailer'
+        }
     }
+    parameters {
+        stringParameter name: 'RECIPIENT_EMAIL'
+        stringParameter name: 'ADDON_ENVIRONMENT'
     }
     environment {
         MAIL_CONFIG = credentials('smtp')
@@ -11,13 +15,14 @@ pipeline {
     stages {
         stage('build') {
             steps {
-dir('mailer') {
-                script {
-                    sh "./mailer.sh ${env.MAIL_CONFIG}"
+                dir('mailer') {
+                    script {
+                        sh "ADDON_ENVIRONMENT ./mailer.sh ${env.MAIL_CONFIG} ${params.RECIPIENT_EMAIL}"
+                    }
                 }
-}
             }
         }
     }
 }
+
 

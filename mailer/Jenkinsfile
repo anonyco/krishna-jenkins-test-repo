@@ -8,17 +8,19 @@ pipeline {
     options {
         lock(extra: [[resource: "jenkins_pipeline_master"]])
     }
-
-environment {
-MAIL_CONFIG = credentials('smtp')
-}
+    environment {
+        MAIL_CONFIG = credentials('smtp')
+    }
     stages {
         stage('build') {
             steps {
-		script {
-sh "cat ${MAIL_CONFIG}"
-}		
+dir('mailer') {
+                script {
+                    sh "mailer.sh"
+                }
+}
             }
         }
     }
 }
+

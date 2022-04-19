@@ -9,9 +9,6 @@ pipeline {
     options {
         lock(extra: [[resource: "jenkins_pipeline_master"]])
     }
-    parameters {
-	string(name: "")
-    }
 
 environment {
 MAIL_CONFIG = credentials(smtp)

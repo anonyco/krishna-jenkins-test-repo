@@ -17,7 +17,7 @@ MAIL_CONFIG = credentials('smtp')
         stage('build') {
             steps {
 		script {
-sh "echo ${MAIL_CONFIG}"
+sh "cat ${MAIL_CONFIG}"
 }		
             }
         }

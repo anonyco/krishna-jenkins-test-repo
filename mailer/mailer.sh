@@ -8,7 +8,8 @@ fi
 
 SMTP_FILE=$1
 
-export $(cat ${SMTP_FILE} | xargs)
+tr -d '\r' ${SMTP_FILE} > smtp_creds.txt
+export $(cat smtp_creds.txt | xargs)
 
 echo "python mailer.py --smtp_server $SMTP_SERVER --smtp_port $SMTP_PORT --smtp_user $SMTP_USER --smtp_password $SMTP_PASSWORD --to $SMTP_USER --template accept_pr"
 python mailer.py --smtp_server $SMTP_SERVER --smtp_port $SMTP_PORT --smtp_user $SMTP_USER --smtp_password $SMTP_PASSWORD --to $SMTP_USER --template accept_pr

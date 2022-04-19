@@ -9,6 +9,7 @@ pipeline {
     parameters {
         string name: 'RECIPIENT_EMAIL'
         string name: 'ADDON_ENVIRONMENT'
+	string name: 'TEMPLATE'
     }
     environment {
         MAIL_CONFIG = credentials('smtp')
@@ -18,7 +19,7 @@ pipeline {
             steps {
                 dir('mailer') {
                     script {
-                        sh "${params.ADDON_ENVIRONMENT} ./mailer.sh ${env.MAIL_CONFIG} ${params.RECIPIENT_EMAIL}"
+                        sh "${params.ADDON_ENVIRONMENT} ./mailer.sh ${env.MAIL_CONFIG} ${params.RECIPIENT_EMAIL} ${params.TEMPLATE}"
                     }
                 }
             }

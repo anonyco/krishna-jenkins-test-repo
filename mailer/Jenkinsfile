@@ -5,9 +5,6 @@ pipeline {
         dir 'mailer'
     }
     }
-    options {
-        lock(extra: [[resource: "jenkins_pipeline_master"]])
-    }
     environment {
         MAIL_CONFIG = credentials('smtp')
     }
@@ -16,7 +13,7 @@ pipeline {
             steps {
 dir('mailer') {
                 script {
-                    sh "mailer.sh"
+                    sh "./mailer.sh"
                 }
 }
             }

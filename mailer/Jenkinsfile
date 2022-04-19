@@ -12,13 +12,16 @@ pipeline {
     parameters {
 	string(name: "")
     }
+
+environment {
+MAIL_CONFIG = credentials(smtp)
+}
     stages {
         stage('build') {
             steps {
-		sh "echo ${params.FROM}"
-		sh "cat ${params.CONTENT_FILE}"
-                    sh './gradlew build'
-		sh "rm ${params.FROM}"
+		script {
+sh "echo ${MAIL_CONFIG}"
+}		
             }
         }
     }

@@ -14,6 +14,8 @@ parser.add_argument("--template", required=True)
 
 args = parser.parse_args()
 
+print(args)
+
 mailserver = smtplib.SMTP(args.smtp_server,args.smtp_port)
 mailserver.ehlo()
 mailserver.starttls()

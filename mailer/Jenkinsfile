@@ -1,3 +1,4 @@
+
 pipeline {
     agent {
         dockerfile {
@@ -17,7 +18,7 @@ pipeline {
             steps {
                 dir('mailer') {
                     script {
-                        sh "ADDON_ENVIRONMENT ./mailer.sh ${env.MAIL_CONFIG} ${params.RECIPIENT_EMAIL}"
+                        sh "${params.ADDON_ENVIRONMENT} ./mailer.sh ${env.MAIL_CONFIG} ${params.RECIPIENT_EMAIL}"
                     }
                 }
             }

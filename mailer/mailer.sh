@@ -1,6 +1,6 @@
 #! /bin/bash
 
-if [[ $# -lt 1 ]]
+if [[ $# -lt 2 ]]
 then
   echo "Usage: $0 <smtp file> <recipient email>"
   exit 1

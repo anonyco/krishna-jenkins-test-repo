@@ -139,6 +139,44 @@ spDownloadPatchMail.add_argument("--imap_inbox", required=True)
 
 spDownloadPatchMail.set_defaults(func=downloadPatchMail)
 
+# download and reformat patch
+
+def downloadReFormat(args):
+    downloadPatchMail(args)
+    patchReFormatter(args)
+    pass
+
+spDownloadReFormat = subparser.add_parser('downloadReFormat')
+spDownloadReFormat.add_argument("--path", help = "path to patches", required=True)
+spDownloadReFormat.add_argument("--messageNumber", help = "Message Number from Jenkins", required=True)
+spDownloadReFormat.add_argument("--imap_server", required=True)
+spDownloadReFormat.add_argument("--imap_port", required=True)
+spDownloadReFormat.add_argument("--imap_user", required=True)
+spDownloadReFormat.add_argument("--imap_password", required=True)
+spDownloadReFormat.add_argument("--imap_inbox", required=True)
+
+spDownloadReFormat.set_defaults(func=downloadReFormat)
+
+
+# download and reformat patch
+
+def downloadAndGetBranch(args):
+    downloadPatchMail(args)
+    patchBranchIdentifier(args)
+    pass
+
+spDownloadAndGetBranch = subparser.add_parser('downloadAndGetBranch')
+spDownloadAndGetBranch.add_argument("--path", help = "path to patches", required=True)
+spDownloadAndGetBranch.add_argument("--messageNumber", help = "Message Number from Jenkins", required=True)
+spDownloadAndGetBranch.add_argument("--imap_server", required=True)
+spDownloadAndGetBranch.add_argument("--imap_port", required=True)
+spDownloadAndGetBranch.add_argument("--imap_user", required=True)
+spDownloadAndGetBranch.add_argument("--imap_password", required=True)
+spDownloadAndGetBranch.add_argument("--imap_inbox", required=True)
+
+spDownloadAndGetBranch.set_defaults(func=downloadAndGetBranch)
+
+
 if __name__ == '__main__':
     args = parser.parse_args()
     args.func(args)

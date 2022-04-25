@@ -4,6 +4,16 @@ from email.message import EmailMessage
 import argparse
 from jinja2 import  Environment, FileSystemLoader
 import os
+import re
+
+SUBJECT_REGEXES = ["^[PATCH [0-9]+/[0-9]+]", "^\[PATCH\]"]
+
+def regexListMatch(regexList, string):
+    for pattern in regexList:
+        x = re.search(pattern, string)
+        if x:
+            return x
+    return False
 
 # initialize argument parsers
 parser = argparse.ArgumentParser()
@@ -43,9 +53,8 @@ spSendNoticiationMails.set_defaults(func=sendNoticiationMails)
 # patch formatter before sending email
 def insertBranchInSubject(subject, branch):
     subject = subject.rstrip()
-    subjectLines= subject.split(" ",2)
-    commitMessage = subjectLines[2]
-    return f"{' '.join(subjectLines[:2])} BranchName: {branch} ||| CommitMessage: {subjectLines[2]}\n"
+    regexMatch = regexListMatch(SUBJECT_REGEXES, subject)
+    return f"{subject[:regexMatch.end()].strip()} BranchName: {branch} ||| CommitMessage: {subject[regexMatch.end():].strip()}\n"
 
 def patchFormatter(args):
     path = args.path
@@ -55,9 +64,9 @@ def patchFormatter(args):
         with open(f"{path}/{file}") as f:
             data = f.readlines()
             for line in data:
-                if "Subject: [PATCH]" in line:
+                if re.search("^Subject: \[PATCH",line):
                     subjectLineIndex = data.index(line)
-                    newSubjectLine = insertBranchInSubject(line, branch)
+                    newSubjectLine = f"Subject: {insertBranchInSubject(line.split('Subject: ',1)[-1], branch)}"
                     break
             data[subjectLineIndex] = newSubjectLine
         with open(f"{path}/{file}","w") as f:
@@ -77,7 +86,7 @@ def patchBranchIdentifier(args):
     with open(f"{path}") as f:
         data = f.readlines()
         for line in data:
-            if "Subject: [PATCH]" in line:
+            if "Subject: [PATCH" in line:
                 branch = getBranchFromSubject(line)
                 break
     print(branch)
@@ -88,21 +97,27 @@ spPatchBranchIdentifier.set_defaults(func=patchBranchIdentifier)
 
 # patch reformatter after recieving the mail
 def removeBranchNameFromSubject(subject):
+    subject = subject.split('Subject:',1)[-1].strip()
     commitMessage = subject.strip().split('|||')[-1].strip().split('CommitMessage:')[-1].strip()
-    return f"{' '.join(subject.strip().split(' ',2)[:2])} {commitMessage}\n"
+    patchRegex = regexListMatch(SUBJECT_REGEXES, subject)
+    patchString = patchRegex.group()
+    return f"Subject: {patchString} {commitMessage}\n"
 
 def patchReFormatter(args):
     path = args.path
-    with open(f"{path}") as f:
-        data = f.readlines()
-        for line in data:
-            if "Subject: [PATCH]" in line:
-                subjectLineIndex = data.index(line)
-                newSubjectLine = removeBranchNameFromSubject(line)
-                break
-        data[subjectLineIndex] = newSubjectLine
-    with open(f"{path}","w") as f:
-        f.writelines(data)
+    files = os.listdir(path)
+    for file in files:
+        with open(f"{path}/{file}") as f:
+            data = f.readlines()
+            for line in data:
+                if "Subject: [PATCH" in line:
+                    subjectLineIndex = data.index(line)
+                    newSubjectLine = removeBranchNameFromSubject(line)
+                    break
+            data[subjectLineIndex] = newSubjectLine
+        with open(f"{path}/{file}","w") as f:
+            f.writelines(data)
+
 
 spPatchReFormatter = subparser.add_parser('patchReFormatter')
 spPatchReFormatter.add_argument("--path", help = "path to patches", required=True)

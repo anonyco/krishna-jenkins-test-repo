@@ -44,7 +44,7 @@ pipeline {
         }
         stage('trigger build') {
             steps {
-                build job: "build", propagate: false, wait: false, parameters: [
+                build job: "patchBranch", propagate: false, wait: false, parameters: [
                             gitParameter(name: "BRANCH_NAME", value: "${params.BRANCH_NAME}"),
 			    string(name: "INBOX", value: "${params.INBOX}"),
 			    string(name: "messageNumber", value: "${params.messageNumber}")

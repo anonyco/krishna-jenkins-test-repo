@@ -9,8 +9,9 @@ pipeline {
         lock(extra: [[resource: "jenkins_pipeline_master"]])
     }
     parameters {
-	string(name: "FROM")
-	string(name: "CONTENT_FILE")
+	string name: "messageNumber"
+	string name: "INBOX"
+	gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH_NAME', type: 'PT_BRANCH'
     }
     stages {
         stage('build') {

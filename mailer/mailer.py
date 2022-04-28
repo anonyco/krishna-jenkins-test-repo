@@ -1,3 +1,4 @@
+from ast import arg
 import smtplib
 import imaplib
 from email.message import EmailMessage
@@ -57,11 +58,30 @@ def getPatchNumber(subject):
 def ensureFolder(folderPath):
     if path.exists(folderPath) and path.isdir(folderPath) and len(os.listdir(folderPath)) == 0:
         pass
-    elif path.exists(folderPath) and (path.isdir(folderPath) and len(os.listdir(folderPath)) > 0) or (not path.isdir(folderPath)):
+    elif path.exists(folderPath) and ((path.isdir(folderPath) and len(os.listdir(folderPath)) > 0) or (not path.isdir(folderPath))):
         shutil.rmtree(folderPath)
         os.mkdir(folderPath)
     else:
         os.mkdir(folderPath)
+
+def getBranchFromSubject(subject):
+    return subject.split('|||')[0].strip().split("BranchName:")[-1].strip()
+
+def insertBranchInSubject(subject, branch):
+    subject = subject.rstrip()
+    regexMatch = regexListMatch(SUBJECT_REGEXES, subject)
+    return f"{subject[:regexMatch.end()].strip()} BranchName: {branch} ||| CommitMessage: {subject[regexMatch.end():].strip()}\n"
+
+def getCommitMessage(subject):
+    return subject.strip().split('|||')[-1].strip().split('CommitMessage:')[-1].strip()
+
+def removeBranchNameFromSubject(subject):
+    subject = subject.split('Subject:',1)[-1].strip()
+    commitMessage = getCommitMessage(subject)
+    patchRegex = regexListMatch(SUBJECT_REGEXES, subject)
+    patchString = patchRegex.group()
+    return f"Subject: {patchString} {commitMessage}\n"
+
 
 # initialize argument parsers
 parser = argparse.ArgumentParser()
@@ -92,11 +112,6 @@ def notificationMailer(args):
 createSubparser(subparser, notificationMailer, ["smtpServer", "smtpPort", "smtpUser", "smtpPassword","to","template"])
 
 # patch formatter before sending email
-def insertBranchInSubject(subject, branch):
-    subject = subject.rstrip()
-    regexMatch = regexListMatch(SUBJECT_REGEXES, subject)
-    return f"{subject[:regexMatch.end()].strip()} BranchName: {branch} ||| CommitMessage: {subject[regexMatch.end():].strip()}\n"
-
 def patchFormatter(args):
     path = args.path
     branch = args.branch
@@ -115,34 +130,7 @@ def patchFormatter(args):
 
 createSubparser(subparser, patchFormatter, ["path","branch"])
 
-# patch branch identifier
-def getBranchFromSubject(subject):
-    return subject.split('|||')[0].strip().split("BranchName:")[-1].strip()
-
-def patchBranchIdentifier(args):
-    path = args.path
-    with open(f"{path}") as f:
-        data = f.readlines()
-        for line in data:
-            if "Subject: [PATCH" in line:
-                branch = getBranchFromSubject(line)
-                break
-    print(branch)
-
-createSubparser(subparser, patchBranchIdentifier, ["path"])
-
 # patch reformatter after recieving the mail
-def getCommitMessage(subject):
-    return subject.strip().split('|||')[-1].strip().split('CommitMessage:')[-1].strip()
-
-def removeBranchNameFromSubject(subject):
-    subject = subject.split('Subject:',1)[-1].strip()
-    commitMessage = getCommitMessage(subject)
-    patchRegex = regexListMatch(SUBJECT_REGEXES, subject)
-    patchString = patchRegex.group()
-    return f"Subject: {patchString} {commitMessage}\n"
-
-
 def patchReFormatter(args):
     path = args.path
     files = os.listdir(path)
@@ -182,6 +170,8 @@ def downloadPatchMail(args):
             mail = getEmail(messageNumber, args)
             writeMessageToFile(path,mail)
 
+
+
 createSubparser(subparser, downloadPatchMail, ["path","messageNumber","imapServer","imapPort","imapUser","imapPassword","imapInbox"])
 
 # download and reformat patch
@@ -209,10 +199,9 @@ def checkMailForJobTrigger(args):
         sys.exit(1)
     else:
         sys.exit()
-
+    
 createSubparser(subparser, checkMailForJobTrigger, ["messageNumber","imapServer","imapPort","imapUser","imapPassword","imapInbox"])
 
 if __name__ == '__main__':
     args = parser.parse_args()
     args.func(args)
-

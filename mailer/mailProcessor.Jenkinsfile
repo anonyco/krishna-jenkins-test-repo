@@ -1,3 +1,4 @@
+def statusCode = "0"
 pipeline {
     agent {
         dockerfile {

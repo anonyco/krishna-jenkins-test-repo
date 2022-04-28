@@ -29,8 +29,12 @@ pipeline {
             steps {
                 dir('mailer') {
                     script {
-                        statusCode = sh script:"./mailer.sh ${env.MAIL_CONFIG} checkMailForBranch ${params.INBOX} ${params.messageNumber}", returnStdout:true
-                        echo "${statusCode.trim()}"
+                        branchName = sh(script:"./mailer.sh ${env.MAIL_CONFIG} checkMailForBranch ${params.INBOX} ${params.messageNumber}", returnStdout:true).trim()
+	                build job: "jenkins_cloner", propagate: false, wait: false, parameters: [
+                            gitParameter(name: "BRANCH_NAME", value: "${branchName}")
+                            string(name: "INBOX", value: "{params.INBOX}")
+                            string(name: "messageNumber", value: "{params.messageNumber}")
+                            ]
                     }
                 }
             }

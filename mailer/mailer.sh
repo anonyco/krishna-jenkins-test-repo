@@ -44,7 +44,7 @@ patchReFormatter () {
         echo "Usage: $0 $SMTP_FILE $FUNCTION_TYPE <path>"
         exit 1
     fi
-    PATH=$1 
+    PATH=$1
     echo "$PYTHON_BIN mailer.py $FUNCTION_TYPE --path $PATH"
     $PYTHON_BIN mailer.py $FUNCTION_TYPE --path $PATH
 

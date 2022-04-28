@@ -10,6 +10,8 @@ pipeline {
     }
     parameters {
         gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH_NAME', type: 'PT_BRANCH'
+	string name: "messageNumber"
+	string name: "INBOX"
     }
     stages {
         stage('clone') {
@@ -44,6 +46,8 @@ pipeline {
             steps {
                 build job: "build", propagate: false, wait: false, parameters: [
                             gitParameter(name: "BRANCH_NAME", value: "${params.BRANCH_NAME}")
+			    string(name: "INBOX", value: "{params.INBOX}")
+			    string(name: "messageNumber", value: "{params.messageNumber}")
                             ]
 
             }

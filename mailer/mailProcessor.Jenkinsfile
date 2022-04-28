@@ -29,7 +29,7 @@ pipeline {
             steps {
                 dir('mailer') {
                     script {
-                        statusCode = sh script:"./mailer.sh ${env.MAIL_CONFIG} checkMailForJobTrigger ${params.INBOX} ${params.messageNumber}", returnStatus:true
+                        statusCode = sh script:"./mailer.sh ${env.MAIL_CONFIG} checkMailForBranch ${params.INBOX} ${params.messageNumber}", returnStdout:true
                         echo "${statusCode}"
                     }
                 }

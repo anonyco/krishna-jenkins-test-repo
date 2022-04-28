@@ -25,7 +25,7 @@ pipeline {
             }
         }
         stage('Trigger Patch') {
-            when { expression { statusCode == "0" } }
+            when { expression { statusCode == 0 } }
             steps {
                 dir('mailer') {
                     script {

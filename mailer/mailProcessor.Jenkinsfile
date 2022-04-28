@@ -8,7 +8,6 @@ pipeline {
     parameters {
         string name: 'INBOX'
         string name: 'messageNumber'
-	string name: 'TEMPLATE'
     }
     environment {
         MAIL_CONFIG = credentials('smtp')

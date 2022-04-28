@@ -30,7 +30,7 @@ pipeline {
                 dir('mailer') {
                     script {
                         statusCode = sh script:"./mailer.sh ${env.MAIL_CONFIG} checkMailForBranch ${params.INBOX} ${params.messageNumber}", returnStdout:true
-                        echo "${statusCode}"
+                        echo "${statusCode.trim()}"
                     }
                 }
             }

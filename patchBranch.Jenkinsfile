@@ -38,7 +38,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "ls && pwd"
+                    sh "git am incoming/*"
                 }
             }
         }
@@ -51,7 +51,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "ls && pwd"
+                    sh "./gradlew build"
                 }
             }
         }
@@ -65,7 +65,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "ls && pwd"
+                    sh "git push origin ${params.BRANCH_NAME}"
                 }
             }
         }

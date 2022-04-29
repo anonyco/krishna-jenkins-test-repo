@@ -40,7 +40,13 @@ pipeline {
                     script {
                         sh "git config user.email 'you@example.com'"
                         sh "git config user.name 'Your Name'"
-                        sh "git am incoming/*"
+                        try {
+                            sh "git am incoming/*"
+                        } catch (Exception e) {
+                            echo 'Exception occurred: ' + e.toString()
+                            sh "git am --abort"
+                            raise e
+                        }
                     }
                 }
             }

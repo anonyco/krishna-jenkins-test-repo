@@ -33,7 +33,6 @@ pipeline {
                 dockerfile {
                     filename 'Dockerfile'
                     dir 'mailer'
-                    customWorkspace 
                 }
             }
             steps {

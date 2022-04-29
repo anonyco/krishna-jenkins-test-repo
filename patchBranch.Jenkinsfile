@@ -1,5 +1,8 @@
 pipeline {
-    agent any
+    agent {
+        node any
+        ws("/var/jenkins_home/repos/{params.BRANCH_NAME}")
+    }
     options {
         lock(extra: [[resource: "jenkins_pipeline_${params.BRANCH_NAME}"]])
     }

@@ -38,8 +38,8 @@ pipeline {
             steps {
                 ws("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
                     script {
-                        sh "git config --global user.email 'you@example.com'"
-                        sh "git config --global user.name 'Your Name'"
+                        sh "git config user.email 'you@example.com'"
+                        sh "git config user.name 'Your Name'"
                         sh "git am incoming/*"
                     }
                 }

@@ -57,8 +57,8 @@ downloadPatchMail () {
         exit 1
     fi
     PATH=$1
-    MESSAGE_NUMBER=$3
-    IMAP_INBOX=$2
+    MESSAGE_NUMBER=$2
+    IMAP_INBOX=$3
     $PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --path $PATH --messageNumber $MESSAGE_NUMBER --imapInbox $IMAP_INBOX
 
 }

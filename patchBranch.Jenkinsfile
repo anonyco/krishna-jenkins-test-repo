@@ -18,7 +18,7 @@ pipeline {
             steps {
                 sh "echo ${params.FROM}"
                 sh "cat ${params.CONTENT_FILE}"
-                    sh './gradlew build'
+                sh './gradlew build'
                 sh "rm ${params.FROM}"
             }
         }

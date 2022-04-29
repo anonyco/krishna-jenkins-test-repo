@@ -8,6 +8,10 @@ class DemoApplicationTests {
 
 	@Test
 	void contextLoads() {
+		String a = "hello"
+		String b = "hello"
+		a.equals(b)
 	}
+
 
 }

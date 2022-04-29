@@ -16,10 +16,16 @@ pipeline {
     stages {
         stage('Download Patches') {
             steps {
+                script {
+                    sh "ls && pwd"
+                }
             }
         }
         stage('Apply Patch') {
             steps {
+                script {
+                    sh "ls && pwd"
+                }
             }
         }
         stage('Test') {
@@ -29,10 +35,16 @@ pipeline {
                 }
             }
             steps {
+                script {
+                    sh "ls && pwd"
+                }
             }
         }
         stage('Push') {
             steps {
+                script {
+                    sh "ls && pwd"
+                }
             }
         }
     }

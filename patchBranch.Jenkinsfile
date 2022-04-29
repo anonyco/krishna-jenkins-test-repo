@@ -29,16 +29,11 @@ pipeline {
             }
         }
         stage('Apply Patch') {
-            agent {
-                dockerfile {
-                    filename 'Dockerfile'
-                    dir 'mailer'
-                    customWorkspace "/var/jenkins_home/repos/${params.BRANCH_NAME}"
-                }
-            }
             steps {
-                script {
-                    sh "git am incoming/*"
+                ws("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
+                    script {
+                        sh "git am incoming/*"
+                    }
                 }
             }
         }

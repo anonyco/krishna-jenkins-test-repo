@@ -23,7 +23,7 @@ pipeline {
             steps {
                 dir("mailer") {
                     script {
-                        sh "./mailer.sh ${env.MAIL_CONFIG} downloadReFormat ../incoming ${params.INBOX} ${params.messageNumber}"
+                        sh "./mailer.sh ${env.MAIL_CONFIG} downloadReFormat ../incoming ${params.messageNumber} ${params.INBOX}"
                     }
                 }
             }

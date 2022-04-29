@@ -45,7 +45,7 @@ pipeline {
                         } catch (Exception e) {
                             echo 'Exception occurred: ' + e.toString()
                             sh "git am --abort"
-                            raise e
+                            error e
                         }
                     }
                 }

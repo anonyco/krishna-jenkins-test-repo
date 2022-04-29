@@ -1,7 +1,7 @@
 pipeline {
     agent {
         node {
-            label "master"
+            name "built-in node"
             customWorkspace "/var/jenkins_home/repos/{params.BRANCH_NAME}"
         }
     }

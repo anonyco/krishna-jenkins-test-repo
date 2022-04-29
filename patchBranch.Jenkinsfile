@@ -14,7 +14,7 @@ pipeline {
                 dockerfile {
                     filename 'Dockerfile'
                     dir 'mailer'
-                    customWorkspace "/var/jenkins_home/repos/{params.BRANCH_NAME}"
+                    customWorkspace "/var/jenkins_home/repos/${params.BRANCH_NAME}"
                 }
             }
             steps {
@@ -28,6 +28,7 @@ pipeline {
                 dockerfile {
                     filename 'Dockerfile'
                     dir 'mailer'
+                    customWorkspace "/var/jenkins_home/repos/${params.BRANCH_NAME}"
                 }
             }
             steps {
@@ -40,6 +41,7 @@ pipeline {
             agent {
                 docker {
                     image 'gradle:7.4.2-jdk11-alpine'
+                    customWorkspace "/var/jenkins_home/repos/${params.BRANCH_NAME}"
                 }
             }
             steps {
@@ -53,6 +55,7 @@ pipeline {
                 dockerfile {
                     filename 'Dockerfile'
                     dir 'mailer'
+                    customWorkspace "/var/jenkins_home/repos/${params.BRANCH_NAME}"
                 }
             }
             steps {

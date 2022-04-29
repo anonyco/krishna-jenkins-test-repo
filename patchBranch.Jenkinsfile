@@ -14,12 +14,25 @@ pipeline {
         gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH_NAME', type: 'PT_BRANCH'
     }
     stages {
-        stage('build') {
+        stage('Download Patches') {
             steps {
-                sh "echo ${params.FROM}"
-                sh "cat ${params.CONTENT_FILE}"
-                sh './gradlew build'
-                sh "rm ${params.FROM}"
+            }
+        }
+        stage('Apply Patch') {
+            steps {
+            }
+        }
+        stage('Test') {
+            agent {
+                docker {
+                    image 'gradle:7.4.2-jdk11-alpine'
+                }
+            }
+            steps {
+            }
+        }
+        stage('Push') {
+            steps {
             }
         }
     }

@@ -44,7 +44,7 @@ patchReFormatter () {
         echo "Usage: $0 $SMTP_FILE $FUNCTION_TYPE <path>"
         exit 1
     fi
-    PATH=$1
+    PATH=$1 
     echo "$PYTHON_BIN mailer.py $FUNCTION_TYPE --path $PATH"
     $PYTHON_BIN mailer.py $FUNCTION_TYPE --path $PATH
 
@@ -57,8 +57,8 @@ downloadPatchMail () {
         exit 1
     fi
     PATH=$1
-    MESSAGE_NUMBER=$2
-    IMAP_INBOX=$3
+    MESSAGE_NUMBER=$3
+    IMAP_INBOX=$2
     $PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --path $PATH --messageNumber $MESSAGE_NUMBER --imapInbox $IMAP_INBOX
 
 }

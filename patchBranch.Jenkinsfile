@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        node {
-            name "built-in node"
-            customWorkspace "/var/jenkins_home/repos/{params.BRANCH_NAME}"
-        }
-    }
+    agent any
     options {
         lock(extra: [[resource: "jenkins_pipeline_${params.BRANCH_NAME}"]])
     }
@@ -19,6 +14,7 @@ pipeline {
                 dockerfile {
                     filename 'Dockerfile'
                     dir 'mailer'
+                    customWorkspace "/var/jenkins_home/repos/{params.BRANCH_NAME}"
                 }
             }
             steps {

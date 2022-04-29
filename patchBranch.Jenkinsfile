@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        dockerfile {
-            filename 'Dockerfile'
-            dir 'mailer'
-        }
-    }
+    agent any
     options {
         lock(extra: [[resource: "jenkins_pipeline_${params.BRANCH_NAME}"]])
     }
@@ -15,6 +10,12 @@ pipeline {
     }
     stages {
         stage('Download Patches') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile'
+                    dir 'mailer'
+                }
+            }
             steps {
                 script {
                     sh "ls && pwd"
@@ -22,6 +23,12 @@ pipeline {
             }
         }
         stage('Apply Patch') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile'
+                    dir 'mailer'
+                }
+            }
             steps {
                 script {
                     sh "ls && pwd"
@@ -41,6 +48,12 @@ pipeline {
             }
         }
         stage('Push') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile'
+                    dir 'mailer'
+                }
+            }
             steps {
                 script {
                     sh "ls && pwd"

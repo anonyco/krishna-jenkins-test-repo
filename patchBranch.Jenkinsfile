@@ -8,6 +8,9 @@ pipeline {
         string name: "INBOX"
         gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH_NAME', type: 'PT_BRANCH'
     }
+    environment {
+        MAIL_CONFIG = credentials('smtp')
+    }
     stages {
         stage('Download Patches') {
             agent {
@@ -18,8 +21,10 @@ pipeline {
                 }
             }
             steps {
-                script {
-                    sh "ls && pwd"
+                dir("mailer") {
+                    script {
+                        sh "./mailer.sh ${env.MAIL_CONFIG} downloadReFormat ../incoming ${params.INBOX} ${params.messageNumber}"
+                    }
                 }
             }
         }

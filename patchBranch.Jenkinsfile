@@ -17,11 +17,10 @@ pipeline {
                 dockerfile {
                     filename 'Dockerfile'
                     dir 'mailer'
-                    customWorkspace "/var/jenkins_home/repos/${params.BRANCH_NAME}"
                 }
             }
             steps {
-                dir("mailer") {
+                dir("/var/jenkins_home/repos/${params.BRANCH_NAME}/mailer") {
                     script {
                         sh "./mailer.sh ${env.MAIL_CONFIG} downloadReFormat ../incoming ${params.messageNumber} ${params.INBOX}"
                     }
@@ -36,7 +35,7 @@ pipeline {
                 }
             }
             steps {
-                ws("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
+                dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
                     script {
                         sh "git config user.email 'you@example.com'"
                         sh "git config user.name 'Your Name'"
@@ -55,13 +54,14 @@ pipeline {
             agent {
                 docker {
                     image 'gradle:7.4.2-jdk11-alpine'
-                    customWorkspace "/var/jenkins_home/repos/${params.BRANCH_NAME}"
                 }
             }
             steps {
+dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
                 script {
                     sh "./gradlew build"
                 }
+}
             }
         }
         stage('Push') {

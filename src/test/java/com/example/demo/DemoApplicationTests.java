@@ -8,12 +8,12 @@ class DemoApplicationTests {
 
 	@Test
 	void contextLoads() {
-		String a = "hello"
-		String b = "hello"
-		a.equals(b)
-		b.equals(a)
-		String c = "world"
-		a.equals(c)
+		String a = "hello";
+		String b = "hello";
+		a.equals(b);
+		b.equals(a);
+		String c = "world";
+		a.equals(c);
 	}
 
 

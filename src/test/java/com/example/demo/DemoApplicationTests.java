@@ -12,7 +12,7 @@ class DemoApplicationTests {
 		String b = "hello"
 		a.equals(b)
 		b.equals(a)
-		String c = "hello"
+		String c = "world"
 	}
 
 

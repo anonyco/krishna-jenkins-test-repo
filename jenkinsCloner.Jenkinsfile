@@ -24,7 +24,8 @@ pipeline {
                                 retry(2) {
                                     sh "git reset --hard origin/${params.BRANCH_NAME}"
                                     sh "git checkout origin/${params.BRANCH_NAME}"
-                                    sh "git pull"
+                                    sh "git pull origin ${params.BRANCH_NAME}"
+                                    sh "git checkout origin/${params.BRANCH_NAME}"
                                 }
                             }
                         }

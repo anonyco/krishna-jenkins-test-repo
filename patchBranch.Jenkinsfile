@@ -69,13 +69,14 @@ dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
                 dockerfile {
                     filename 'Dockerfile'
                     dir 'mailer'
-                    customWorkspace "/var/jenkins_home/repos/${params.BRANCH_NAME}"
                 }
             }
             steps {
+dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
                 script {
                     sh "git push origin ${params.BRANCH_NAME}"
                 }
+}
             }
         }
     }

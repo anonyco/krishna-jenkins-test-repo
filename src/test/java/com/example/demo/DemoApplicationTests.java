@@ -13,6 +13,7 @@ class DemoApplicationTests {
 		a.equals(b)
 		b.equals(a)
 		String c = "world"
+		a.equals(c)
 	}
 
 

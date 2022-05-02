@@ -74,7 +74,10 @@ dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
             steps {
 dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
                 script {
+withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
                     sh "git push origin ${params.BRANCH_NAME}"
+sh "printenv"
+}
                 }
 }
             }

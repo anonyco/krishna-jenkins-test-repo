@@ -75,8 +75,7 @@ dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
 dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
                 script {
 withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
-sh "printenv"
-                    sh "git push --repo= https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo origin ${params.BRANCH_NAME}"
+                    sh "git push"
 }
                 }
 }

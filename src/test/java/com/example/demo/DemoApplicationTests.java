@@ -11,6 +11,7 @@ class DemoApplicationTests {
 		String a = "hello"
 		String b = "hello"
 		a.equals(b)
+		b.equals(a)
 	}
 
 

@@ -43,6 +43,10 @@ pipeline {
                             sh "git am incoming/*"
                         } catch (Exception e) {
                             echo 'Exception occurred: ' + e.toString()
+                            sh "git am --show-current-patch > bad.patch"
+                            dir("mailer"){
+                                sh "./mailer.sh ${env.MAIL_CONFIG} failedPatchMail ../bad.patch"
+                            }
                             sh "git am --abort"
                             error e
                         }
@@ -57,11 +61,11 @@ pipeline {
                 }
             }
             steps {
-dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
-                script {
-                    sh "./gradlew build"
+                dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
+                    script {
+                        sh "./gradlew build"
+                    }
                 }
-}
             }
         }
         stage('Push') {
@@ -72,13 +76,13 @@ dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
                 }
             }
             steps {
-dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
-                script {
-withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
-                    sh "git push origin HEAD:${params.BRANCH_NAME}"
-}
+                dir("/var/jenkins_home/repos/${params.BRANCH_NAME}"){
+                    script {
+                        withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
+                            sh "git push origin HEAD:${params.BRANCH_NAME}"
+                        }
+                    }
                 }
-}
             }
         }
     }

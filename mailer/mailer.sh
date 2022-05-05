@@ -97,6 +97,16 @@ checkMailForJobTrigger () {
     $PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --messageNumber $MESSAGE_NUMBER --imapInbox $IMAP_INBOX
 }
 
+failedPatchMail () {
+    if [[ $# -lt 1 ]]
+    then
+        echo "Usage: $0 $SMTP_FILE $FUNCTION_TYPE <Bad Patch File>"
+        exit 1
+    fi
+    BAD_PATCH_FILE=$1
+    $PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --badPatchPath $BAD_PATCH_FILE
+}
+
 if [[ $(type -t $FUNCTION_TYPE) != function ]]; then
     echo "$FUNCTION_TYPE doesn't exists"
 fi

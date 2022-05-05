@@ -10,6 +10,7 @@ import re
 import sys
 from os import path
 import shutil
+import base64
 
 SUBJECT_REGEXES = ["^[PATCH [0-9]+/[0-9]+]", "^\[PATCH\]"]
 
@@ -201,6 +202,31 @@ def checkMailForJobTrigger(args):
         sys.exit()
     
 createSubparser(subparser, checkMailForJobTrigger, ["messageNumber","imapServer","imapPort","imapUser","imapPassword","imapInbox"])
+
+# to Failed Patch 
+def failedPatchMail(args):
+    mailserver = smtplib.SMTP(args.smtpServer,args.smtpPort)
+    mailserver.ehlo()
+    mailserver.starttls()
+    mailserver.login(args.smtpUser, args.smtpPassword)
+
+    f = open(args.badPatchPath)
+    mail = email.message_from_file(f)
+    f.close()
+
+    msg = EmailMessage()
+    msg['Subject'] = f"PATCH FAILURE: {mail['Subject']}"
+    msg['From'] = args.smtpUser
+    msg['To'] = mail['Return-Path']
+    msg['In-Reply-To'] = mail['Message-Id']
+    msg['References'] = mail['Message-Id']
+    message = "A Patch Failed, Please fix and send all the Patches in the Chain again\n" + "-"*25 + "\n" + base64.b64decode(mail.__dict__['_payload'].replace('\n','')).decode('UTF-8')
+
+    msg.set_content(message)
+    mailserver.send_message(msg)
+    mailserver.quit()
+
+createSubparser(subparser, failedPatchMail, ["smtpServer", "smtpPort", "smtpUser", "smtpPassword","badPatchPath"])
 
 if __name__ == '__main__':
     args = parser.parse_args()

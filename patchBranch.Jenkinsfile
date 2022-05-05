@@ -44,10 +44,10 @@ pipeline {
                         } catch (Exception e) {
                             echo 'Exception occurred: ' + e.toString()
                             sh "git am --show-current-patch > bad.patch"
+                            sh "git am --abort"
                             dir("mailer"){
                                 sh "./mailer.sh ${env.MAIL_CONFIG} failedPatchMail ../bad.patch"
                             }
-                            sh "git am --abort"
                             error e
                         }
                     }

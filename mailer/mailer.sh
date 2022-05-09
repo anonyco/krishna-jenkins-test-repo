@@ -108,6 +108,19 @@ failedPatchMail () {
     $PYTHON_BIN mailer.py $FUNCTION_TYPE --smtpServer $SMTP_SERVER --smtpPort $SMTP_PORT --smtpUser $SMTP_USER --smtpPassword $SMTP_PASSWORD --badPatchPath $BAD_PATCH_FILE
 }
 
+getMailParameter () {
+    if [[ $# -lt 3 ]]
+    then
+        echo "Usage: $0 $SMTP_FILE $FUNCTION_TYPE <mailInbox> <messageNumber> <mailParameter>"
+        exit 1
+    fi
+    IMAP_INBOX=$1
+    MESSAGE_NUMBER=$2
+    MAIL_PARAMETER=$3
+    echo "$PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --messageNumber MESSAGE_NUMBER --mailParameter MAIL_PARAMETER"
+    $PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --imapInbox $IMAP_INBOX --messageNumber $MESSAGE_NUMBER --mailParameter $MAIL_PARAMETER
+}
+
 if [[ $(type -t $FUNCTION_TYPE) != function ]]; then
     echo "$FUNCTION_TYPE doesn't exists"
 fi

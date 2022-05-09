@@ -228,6 +228,12 @@ def failedPatchMail(args):
 
 createSubparser(subparser, failedPatchMail, ["smtpServer", "smtpPort", "smtpUser", "smtpPassword","badPatchPath"])
 
+def getMailParameter(args):
+    mail = getEmail(args.messageNumber, args)
+    print(mail[args.mailParameter])
+
+createSubparser(subparser, getMailParameter, ["imapServer","imapPort","imapUser","imapPassword","messageNumber","mailParameter", "imapInbox"])
+
 if __name__ == '__main__':
     args = parser.parse_args()
     args.func(args)

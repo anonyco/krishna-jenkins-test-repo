@@ -30,15 +30,20 @@ pipeline {
                 dir('mailer') {
                     script {
                         branchName = sh(script:"./mailer.sh ${env.MAIL_CONFIG} checkMailForBranch ${params.INBOX} ${params.messageNumber}", returnStdout:true).trim()
-	                build job: "jenkins_cloner", propagate: false, wait: false, parameters: [
-                            gitParameter(name: "BRANCH_NAME", value: "${branchName}"),
-                            string(name: "INBOX", value: "${params.INBOX}"),
-                            string(name: "messageNumber", value: "${params.messageNumber}")
-                            ]
+                        if (branchName != "main") {
+                            build job: "jenkins_cloner", propagate: false, wait: false, parameters: [
+                                gitParameter(name: "BRANCH_NAME", value: "${branchName}"),
+                                string(name: "INBOX", value: "${params.INBOX}"),
+                                string(name: "messageNumber", value: "${params.messageNumber}")
+                                ]
+                        } else {
+                            FROM = sh(script:"./mailer.sh ${env.MAIL_CONFIG} getMailParameter ${params.INBOX} ${params.messageNumber} From", returnStdout:true).trim()
+                            SUBJECT = sh(script:"./mailer.sh ${env.MAIL_CONFIG} getMailParameter ${params.INBOX} ${params.messageNumber} Subject", returnStdout:true).trim()
+                            sh "SUBJECT=${SUBJECT} FROM=${FROM} ./mailer.sh ${env.MAIL_CONFIG} notificationMailer ${FROM} patchRejectionForBranch"
+                        }
                     }
                 }
             }
         }
     }
 }
-

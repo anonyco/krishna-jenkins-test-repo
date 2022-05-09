@@ -104,8 +104,8 @@ failedPatchMail () {
         exit 1
     fi
     BAD_PATCH_FILE=$1
-    echo "$PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --badPatchPath $BAD_PATCH_FILE"
-    $PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --badPatchPath $BAD_PATCH_FILE
+    echo "$PYTHON_BIN mailer.py $FUNCTION_TYPE --smtpServer $SMTP_SERVER --smtpPort $SMTP_PORT --smtpUser $SMTP_USER --smtpPassword $SMTP_PASSWORD --badPatchPath $BAD_PATCH_FILE"
+    $PYTHON_BIN mailer.py $FUNCTION_TYPE --smtpServer $SMTP_SERVER --smtpPort $SMTP_PORT --smtpUser $SMTP_USER --smtpPassword $SMTP_PASSWORD --badPatchPath $BAD_PATCH_FILE
 }
 
 if [[ $(type -t $FUNCTION_TYPE) != function ]]; then

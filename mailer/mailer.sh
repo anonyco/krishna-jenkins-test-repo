@@ -117,7 +117,6 @@ getMailParameter () {
     IMAP_INBOX=$1
     MESSAGE_NUMBER=$2
     MAIL_PARAMETER=$3
-    echo "$PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --messageNumber MESSAGE_NUMBER --mailParameter MAIL_PARAMETER"
     $PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --imapInbox $IMAP_INBOX --messageNumber $MESSAGE_NUMBER --mailParameter $MAIL_PARAMETER
 }
 

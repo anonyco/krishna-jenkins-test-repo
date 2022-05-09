@@ -38,8 +38,8 @@ pipeline {
                                 ]
                         } else {
                             FROM = sh(script:"./mailer.sh ${env.MAIL_CONFIG} getMailParameter ${params.INBOX} ${params.messageNumber} From", returnStdout:true).trim()
-                            echo ${FROM}
-                            echo ${PATCH_SUBJECT}
+                            echo "${FROM}"
+                            echo "${PATCH_SUBJECT}"
                             PATCH_SUBJECT = sh(script:"./mailer.sh ${env.MAIL_CONFIG} getMailParameter ${params.INBOX} ${params.messageNumber} Subject", returnStdout:true).trim()
                             sh "PATCH_SUBJECT=${PATCH_SUBJECT} FROM=${FROM} ./mailer.sh ${env.MAIL_CONFIG} notificationMailer ${FROM} patchRejectionForBranch"
                         }

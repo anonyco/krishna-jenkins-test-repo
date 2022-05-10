@@ -120,6 +120,17 @@ getMailParameter () {
     $PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --imapInbox $IMAP_INBOX --messageNumber $MESSAGE_NUMBER --mailParameter $MAIL_PARAMETER
 }
 
+patchRejectionForBranch () {
+    if [[ $# -lt 2 ]]
+    then
+        echo "Usage: $0 $SMTP_FILE $FUNCTION_TYPE <mailInbox> <messageNumber>"
+        exit 1
+    fi
+    IMAP_INBOX=$1
+    MESSAGE_NUMBER=$2
+    $PYTHON_BIN mailer.py $FUNCTION_TYPE --imapServer $IMAP_SERVER --imapPort $IMAP_PORT --imapUser $IMAP_USER --imapPassword $IMAP_PASSWORD --imapInbox $IMAP_INBOX --messageNumber $MESSAGE_NUMBER --smtpServer $SMTP_SERVER --smtpPort $SMTP_PORT --smtpUser $SMTP_USER --smtpPassword $SMTP_PASSWORD
+}
+
 if [[ $(type -t $FUNCTION_TYPE) != function ]]; then
     echo "$FUNCTION_TYPE doesn't exists"
 fi

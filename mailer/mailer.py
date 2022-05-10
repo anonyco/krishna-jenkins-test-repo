@@ -83,6 +83,18 @@ def removeBranchNameFromSubject(subject):
     patchString = patchRegex.group()
     return f"Subject: {patchString} {commitMessage}\n"
 
+def prepareMailFromJinja(env, template):
+    jenv = Environment(loader = FileSystemLoader(f"templates/{template}"))
+    msg = EmailMessage()
+    msg['Subject'] = jenv.get_template("subject.jinja").render(**env)
+    msg.set_content(jenv.get_template("body.jinja").render(**env))
+
+def getSMTPCon(args):
+    mailserver = smtplib.SMTP(args.smtpServer,args.smtpPort)
+    mailserver.ehlo()
+    mailserver.starttls()
+    mailserver.login(args.smtpUser, args.smtpPassword)
+    return mailserver
 
 # initialize argument parsers
 parser = argparse.ArgumentParser()
@@ -90,23 +102,14 @@ subparser = parser.add_subparsers()
 
 # to send notifications, used by jenkins
 def notificationMailer(args):
-    mailserver = smtplib.SMTP(args.smtpServer,args.smtpPort)
-    mailserver.ehlo()
-    mailserver.starttls()
-    mailserver.login(args.smtpUser, args.smtpPassword)
-
-    jenv = Environment(loader = FileSystemLoader(f"templates/{args.template}"))
+    mailserver = getSMTPCon(args)
     env = os.environ
-
-    msg = EmailMessage()
-    msg['Subject'] = jenv.get_template("subject.jinja").render(**env)
+    msg = prepareMailFromJinja(env, args.template)
     msg['From'] = args.smtpUser
     msg['To'] = args.to
-    msg.set_content(jenv.get_template("body.jinja").render(**env))
-
-
     mailserver.send_message(msg)
     mailserver.quit()
+
 
 # add sendNotificationMails to subparser
 # example call: python mailer.py notificationMailer <Arguments as shown below>
@@ -205,11 +208,7 @@ createSubparser(subparser, checkMailForJobTrigger, ["messageNumber","imapServer"
 
 # to Failed Patch 
 def failedPatchMail(args):
-    mailserver = smtplib.SMTP(args.smtpServer,args.smtpPort)
-    mailserver.ehlo()
-    mailserver.starttls()
-    mailserver.login(args.smtpUser, args.smtpPassword)
-
+    mailserver = getSMTPCon(args)
     f = open(args.badPatchPath)
     mail = email.message_from_file(f)
     f.close()
@@ -233,6 +232,25 @@ def getMailParameter(args):
     print(mail[args.mailParameter])
 
 createSubparser(subparser, getMailParameter, ["imapServer","imapPort","imapUser","imapPassword","messageNumber","mailParameter", "imapInbox"])
+
+
+def patchRejectionForBranch(args):
+    mail = getEmail(args.messageNumber, args)
+    mailserver = getSMTPCon(args)
+    env = os.environ
+    subject = mail['Subject']
+    env["PATCH_SUBJECT"] = subject
+    env["TARGET_BRANCH"] = getBranchFromSubject(subject)
+    msg = prepareMailFromJinja(env, "patchRejectionForBranch")
+    msg['From'] = args.smtpUser
+    msg['To'] = mail['Return-Path']
+    msg['In-Reply-To'] = mail['Message-Id']
+    msg['References'] = mail['Message-Id']
+    mailserver.send_message(msg)
+    mailserver.quit()
+
+createSubparser(subparser, patchRejectionForBranch, ["imapServer","imapPort","imapUser","imapPassword","messageNumber", "imapInbox", "smtpServer", "smtpPort", "smtpUser", "smtpPassword"])
+
 
 if __name__ == '__main__':
     args = parser.parse_args()

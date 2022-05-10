@@ -88,6 +88,7 @@ def prepareMailFromJinja(env, template):
     msg = EmailMessage()
     msg['Subject'] = jenv.get_template("subject.jinja").render(**env)
     msg.set_content(jenv.get_template("body.jinja").render(**env))
+    return msg
 
 def getSMTPCon(args):
     mailserver = smtplib.SMTP(args.smtpServer,args.smtpPort)

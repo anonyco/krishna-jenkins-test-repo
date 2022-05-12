@@ -14,7 +14,7 @@ FUNCTION_TYPE=$1
 shift
 
 sed 's/\r$//' ${SMTP_FILE} > smtp_creds.txt
-export $(cat smtp_creds.txt | xargs)
+IFS= eval 'export $(cat smtp_creds.txt | xargs)'
 
 notificationMailer () {
     if [[ $# -lt 2 ]]

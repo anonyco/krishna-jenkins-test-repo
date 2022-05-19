@@ -1,4 +1,3 @@
-from ast import arg
 import smtplib
 import imaplib
 from email.message import EmailMessage
@@ -11,6 +10,7 @@ import sys
 from os import path
 import shutil
 import base64
+import ssl
 
 SUBJECT_REGEXES = ["^[PATCH [0-9]+/[0-9]+]", "^\[PATCH\]"]
 
@@ -27,8 +27,17 @@ def createSubparser(subparser, func, argList):
         parser.add_argument(f"--{arg}", required=True)
     parser.set_defaults(func=func)
 
+def getTLSContext():
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+    return context
+
 def getImap(args):
-    imap = imaplib.IMAP4_SSL(args.imapServer)
+    context = getTLSContext()
+    try:
+        imap = imaplib.IMAP4_SSL(args.imapServer, args.imapPort, ssl_context=context)
+    except ssl.SSLCertVerificationError as e:
+        print("SSL Certificate is not Verified, Try this SO Post: https://stackoverflow.com/a/58394602", file=sys.stderr)
+        raise e
     imap.login(args.imapUser, args.imapPassword)
     imap.select(args.imapInbox)
     return imap
@@ -91,10 +100,15 @@ def prepareMailFromJinja(env, template):
     return msg
 
 def getSMTPCon(args):
-    mailserver = smtplib.SMTP(args.smtpServer,args.smtpPort)
-    mailserver.ehlo()
-    mailserver.starttls()
-    mailserver.login(args.smtpUser, args.smtpPassword)
+    context = getTLSContext()
+    try:
+        mailserver = smtplib.SMTP(args.smtpServer,args.smtpPort)
+        mailserver.ehlo()
+        mailserver.starttls(context=context)
+        mailserver.login(args.smtpUser, args.smtpPassword)
+    except ssl.SSLCertVerificationError as e:
+        print("SSL Certificate is not Verified, Try this SO Post: https://stackoverflow.com/a/58394602", file=sys.stderr)
+        raise e
     return mailserver
 
 # initialize argument parsers

@@ -100,9 +100,8 @@ def prepareMailFromJinja(env, template):
 def getSMTPCon(args):
     context = getTLSContext()
     try:
-        mailserver = smtplib.SMTP(args.smtpServer,args.smtpPort)
+        mailserver = smtplib.SMTP_SSL(host=args.smtpServer,port=args.smtpPort,context=context)
         mailserver.ehlo()
-        mailserver.starttls(context=context)
         mailserver.login(args.smtpUser, args.smtpPassword)
     except ssl.SSLCertVerificationError as e:
         print("SSL Certificate is not Verified, Try this SO Post: https://stackoverflow.com/a/58394602", file=sys.stderr)

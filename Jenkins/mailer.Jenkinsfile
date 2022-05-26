@@ -9,7 +9,7 @@ pipeline {
     parameters {
         string name: 'RECIPIENT_EMAIL'
         string name: 'ADDON_ENVIRONMENT'
-	string name: 'TEMPLATE'
+        string name: 'TEMPLATE'
     }
     environment {
         MAIL_CONFIG = credentials('smtp')

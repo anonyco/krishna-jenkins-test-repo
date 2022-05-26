@@ -29,7 +29,7 @@ def getTLSContext():
     context = ssl.SSLContext(ssl.PROTOCOL_TLS)
     return context
 
-def getImap(args):
+def getImap(args, box=None):
     context = getTLSContext()
     try:
         imap = imaplib.IMAP4_SSL(args.imapServer, args.imapPort, ssl_context=context)
@@ -37,11 +37,12 @@ def getImap(args):
         print("SSL Certificate is not Verified, Try this SO Post: https://stackoverflow.com/a/58394602", file=sys.stderr)
         raise e
     imap.login(args.imapUser, args.imapPassword)
-    imap.select(args.imapInbox)
+    if box:
+        imap.select(box)
     return imap
 
-def getEmail(messageNumber, args):
-    imap = getImap(args)
+def getEmail(args, box, messageNumber):
+    imap = getImap(args, box)
     _, data = imap.fetch(messageNumber,'(RFC822)')
     mail = email.message_from_bytes(data[0][1])
     imap.close()
@@ -107,3 +108,8 @@ def getSMTPCon(args):
         print("SSL Certificate is not Verified, Try this SO Post: https://stackoverflow.com/a/58394602", file=sys.stderr)
         raise e
     return mailserver
+
+def sendEmail(args, message):
+    smtp =  getSMTPCon(args)
+    smtp.send_message(message)
+    smtp.quit()

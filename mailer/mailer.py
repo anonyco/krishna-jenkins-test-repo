@@ -14,13 +14,11 @@ subparser = parser.add_subparsers()
 
 # to send notifications, used by jenkins
 def notificationMailer(args):
-    mailserver = getSMTPCon(args)
     env = os.environ
     msg = prepareMailFromJinja(env, args.template)
     msg['From'] = args.smtpUser
     msg['To'] = args.to
-    mailserver.send_message(msg)
-    mailserver.quit()
+    sendEmail(args, msg)
 
 
 # add sendNotificationMails to subparser
@@ -69,8 +67,8 @@ def downloadPatchMail(args):
     path = args.path
     ensureFolder(path)
     messageNumber = args.messageNumber
-    imap = getImap(args)
-    mail = getEmail(messageNumber, args)
+    imap = getImap(args, args.imapInbox)
+    mail = getEmail(args, args.imapInbox, messageNumber)
     PatchSection = regexListMatch(SUBJECT_REGEXES, mail['subject']).group()
     patchRe = re.search("\[PATCH [0-9]+/(.+?)\]",PatchSection)
     totalPatchCount = int(patchRe.group(1)) if patchRe else 1
@@ -83,7 +81,7 @@ def downloadPatchMail(args):
         messageNumbers = imap.search(None,'HEADER', 'In-Reply-To', messageId)
         messageNumbers = messageNumbers[1][0].decode('utf-8').split()
         for messageNumber in messageNumbers:
-            mail = getEmail(messageNumber, args)
+            mail = getEmail(args, args.imapInbox, messageNumber)
             writeMessageToFile(path,mail)
 
 
@@ -101,7 +99,7 @@ createSubparser(subparser, downloadReFormat, ["path","messageNumber","imapServer
 
 # get the branch name for a given message number
 def checkMailForBranch(args):
-    mail = getEmail(args.messageNumber, args)
+    mail = getEmail(args, args.imapInbox, args.messageNumber)
     branchName = getBranchFromSubject(mail['subject'])
     print(branchName)
 
@@ -110,7 +108,7 @@ createSubparser(subparser, checkMailForBranch, ["messageNumber","imapServer","im
 # Check if Mail should trigger a Job
 
 def checkMailForJobTrigger(args):
-    mail = getEmail(args.messageNumber, args)
+    mail = getEmail(args, args.imapInbox, args.messageNumber)
     if 'In-Reply-To' in mail:
         sys.exit(1)
     else:
@@ -120,7 +118,6 @@ createSubparser(subparser, checkMailForJobTrigger, ["messageNumber","imapServer"
 
 # to Failed Patch 
 def failedPatchMail(args):
-    mailserver = getSMTPCon(args)
     f = open(args.badPatchPath)
     mail = email.message_from_file(f)
     f.close()
@@ -134,21 +131,19 @@ def failedPatchMail(args):
     message = "A Patch Failed, Please fix and send all the Patches in the Chain again\n" + "-"*25 + "\n" + base64.b64decode(mail.__dict__['_payload'].replace('\n','')).decode('UTF-8')
 
     msg.set_content(message)
-    mailserver.send_message(msg)
-    mailserver.quit()
+    sendEmail(args, message)
 
 createSubparser(subparser, failedPatchMail, ["smtpServer", "smtpPort", "smtpUser", "smtpPassword","badPatchPath"])
 
 def getMailParameter(args):
-    mail = getEmail(args.messageNumber, args)
+    mail = getEmail(args, args.imapInbox, args.messageNumber)
     print(mail[args.mailParameter])
 
 createSubparser(subparser, getMailParameter, ["imapServer","imapPort","imapUser","imapPassword","messageNumber","mailParameter", "imapInbox"])
 
 
 def patchRejectionForBranch(args):
-    mail = getEmail(args.messageNumber, args)
-    mailserver = getSMTPCon(args)
+    mail = getEmail(args, args.imapInbox, args.messageNumber)
     env = os.environ
     subject = mail['Subject']
     env["PATCH_SUBJECT"] = subject
@@ -158,8 +153,7 @@ def patchRejectionForBranch(args):
     msg['To'] = mail['Return-Path']
     msg['In-Reply-To'] = mail['Message-Id']
     msg['References'] = mail['Message-Id']
-    mailserver.send_message(msg)
-    mailserver.quit()
+    sendEmail(args, msg)
 
 createSubparser(subparser, patchRejectionForBranch, ["imapServer","imapPort","imapUser","imapPassword","messageNumber", "imapInbox", "smtpServer", "smtpPort", "smtpUser", "smtpPassword"])
 

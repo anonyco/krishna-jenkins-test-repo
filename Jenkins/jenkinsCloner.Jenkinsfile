@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'gradle:7.4.2-jdk11-alpine'
-            args '-v /var/jenkins_home/:/var/jenkins_home/'
+            args '-v /var/jenkins_home/:/var/jenkins_home/:rw,z'
         }
     }
     options {

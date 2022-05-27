@@ -23,6 +23,7 @@ pipeline {
             steps {
                 dir("/var/jenkins_home/repos/${params.BRANCH_NAME}/mailer") {
                     script {
+                        sh "cat ${env.MAIL_CONFIG}"
                         sh "./mailer.sh ${env.MAIL_CONFIG} downloadReFormat ../incoming ${params.messageNumber} ${params.INBOX}"
                     }
                 }

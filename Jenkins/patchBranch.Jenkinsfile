@@ -34,6 +34,7 @@ pipeline {
                 dockerfile {
                     filename 'Dockerfile'
                     dir 'mailer'
+                    args '-v /var/jenkins_home/:/var/jenkins_home/:rw,z'
                 }
             }
             steps {
@@ -60,6 +61,7 @@ pipeline {
             agent {
                 docker {
                     image 'gradle:7.4.2-jdk11-alpine'
+                    args '-v /var/jenkins_home/:/var/jenkins_home/:rw,z'
                 }
             }
             steps {
@@ -75,6 +77,7 @@ pipeline {
                 dockerfile {
                     filename 'Dockerfile'
                     dir 'mailer'
+                    args '-v /var/jenkins_home/:/var/jenkins_home/:rw,z'
                 }
             }
             steps {

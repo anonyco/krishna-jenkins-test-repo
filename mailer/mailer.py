@@ -131,7 +131,7 @@ def failedPatchMail(args):
     message = "A Patch Failed, Please fix and send all the Patches in the Chain again\n" + "-"*25 + "\n" + base64.b64decode(mail.__dict__['_payload'].replace('\n','')).decode('UTF-8')
 
     msg.set_content(message)
-    sendEmail(args, message)
+    sendEmail(args, msg)
 
 createSubparser(subparser, failedPatchMail, ["smtpServer", "smtpPort", "smtpUser", "smtpPassword","badPatchPath"])
 

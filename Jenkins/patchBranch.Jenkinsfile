@@ -17,7 +17,7 @@ pipeline {
                 dockerfile {
                     filename 'Dockerfile'
                     dir 'mailer'
-                    args '-v /var/jenkins_home/repos:/var/jenkins_home/repos -v /var/jenkins_home/repos@tmp:/var/jenkins_home/repos@tmp'
+                    args '-v /var/jenkins_home/:/var/jenkins_home/'
                 }
             }
             steps {

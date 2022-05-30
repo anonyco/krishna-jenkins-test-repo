@@ -48,8 +48,8 @@ pipeline {
                             echo 'Exception occurred: ' + e.toString()
                             sh "git am --show-current-patch > bad.patch"
                             sh "git am --abort"
-                            dir("mailer"){
-                                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py failedPatchMail --badPatchPath ../bad.patch"
+                            dir("/var/jenkins_home/repos/main/mailer"){
+                                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py failedPatchMail --badPatchPath /var/jenkins_home/repos/${params.BRANCH_NAME}/bad.patch"
                             }
                             error e
                         }

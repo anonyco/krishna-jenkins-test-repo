@@ -35,10 +35,6 @@ pipeline {
                                 sh "git clone -b ${params.BRANCH_NAME} 'https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo' ${params.BRANCH_NAME}"
                             }
                         }
-                        dir("${params.BRANCH_NAME}") {
-                            commiter= sh(script: "git show -s --format='%ae' ${env.GIT_COMMIT}", returnStdout: true).trim()
-                            echo "${commiter}"
-                        }
                     }
                 }
             }
@@ -54,19 +50,13 @@ pipeline {
             }
         }
     }
-post {
-failure {
+    post {
+        failure {
             emailext body: " - Build # $BUILD_NUMBER - :\n\nCheck console output at $BUILD_URL to view the results.", to: "${commiter}", subject: 'Failure'
+        }
 
-}
-
-success {
+        success {
             emailext body: " - Build # $BUILD_NUMBER - :\n\nCheck console output at $BUILD_URL to view the results.", to: "${commiter}", subject: 'Success'
-
-}
-
-
-
-}
-
+        }
+    }
 }

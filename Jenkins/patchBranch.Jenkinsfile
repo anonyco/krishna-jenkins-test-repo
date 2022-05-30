@@ -24,7 +24,7 @@ pipeline {
                 dir("/var/jenkins_home/repos/${params.BRANCH_NAME}/mailer") {
                     script {
                         sh "cat ${env.MAIL_CONFIG}"
-                        sh "./mailer.sh ${env.MAIL_CONFIG} downloadReFormat ../incoming ${params.messageNumber} ${params.INBOX}"
+                        sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py downloadReFormat --path ../incoming --messageNumber ${params.messageNumber} --imapInbox ${params.INBOX}"
                     }
                 }
             }
@@ -49,7 +49,7 @@ pipeline {
                             sh "git am --show-current-patch > bad.patch"
                             sh "git am --abort"
                             dir("mailer"){
-                                sh "./mailer.sh ${env.MAIL_CONFIG} failedPatchMail ../bad.patch"
+                                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py failedPatchMail --badPatchPath ../bad.patch"
                             }
                             error e
                         }

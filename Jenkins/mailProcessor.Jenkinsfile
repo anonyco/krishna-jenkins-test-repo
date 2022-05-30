@@ -18,7 +18,7 @@ pipeline {
             steps {
                 dir('mailer') {
                     script {
-                        statusCode = sh script:"./mailer.sh ${env.MAIL_CONFIG} checkMailForJobTrigger ${params.INBOX} ${params.messageNumber}", returnStatus:true
+                        statusCode = sh script:"./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py checkMailForJobTrigger --imapInbox ${params.INBOX} --messageNumber ${params.messageNumber}", returnStatus:true
                         echo "${statusCode}"
                     }
                 }
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 dir('mailer') {
                     script {
-                        branchName = sh(script:"./mailer.sh ${env.MAIL_CONFIG} checkMailForBranch ${params.INBOX} ${params.messageNumber}", returnStdout:true).trim()
+                        branchName = sh(script:"./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py checkMailForBranch --imapInbox ${params.INBOX} --messageNumber ${params.messageNumber}", returnStdout:true).trim()
                         if (branchName != "main") {
                             build job: "jenkins_cloner", propagate: false, wait: false, parameters: [
                                 gitParameter(name: "BRANCH_NAME", value: "${branchName}"),
@@ -37,7 +37,7 @@ pipeline {
                                 string(name: "messageNumber", value: "${params.messageNumber}")
                                 ]
                         } else {
-                            sh "./mailer.sh ${env.MAIL_CONFIG} patchRejectionForBranch ${params.INBOX} ${params.messageNumber}"
+                            sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py patchRejectionForBranch --imapInbox ${params.INBOX} --messageNumber ${params.messageNumber}"
                         }
                     }
                 }

@@ -10,8 +10,8 @@ pipeline {
     }
     parameters {
         gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH_NAME', type: 'PT_BRANCH'
-	string name: "messageNumber"
-	string name: "INBOX"
+        string name: "messageNumber"
+        string name: "INBOX"
     }
     stages {
         stage('clone') {
@@ -35,11 +35,10 @@ pipeline {
                                 sh "git clone -b ${params.BRANCH_NAME} 'https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo' ${params.BRANCH_NAME}"
                             }
                         }
-			sh "printenv"
-			dir("${params.BRANCH_NAME}") {
-			commiter= sh(script: "git show -s --format='%ae' ${env.GIT_COMMIT}", returnStdout: true).trim()
-			echo "${commiter}"
-			}
+                        dir("${params.BRANCH_NAME}") {
+                            commiter= sh(script: "git show -s --format='%ae' ${env.GIT_COMMIT}", returnStdout: true).trim()
+                            echo "${commiter}"
+                        }
                     }
                 }
             }

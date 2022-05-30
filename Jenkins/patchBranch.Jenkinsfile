@@ -21,10 +21,11 @@ pipeline {
                 }
             }
             steps {
-                dir("/var/jenkins_home/repos/${params.BRANCH_NAME}/mailer") {
+                dir("/var/jenkins_home/repos/${params.BRANCH_NAME}") {
                     script {
-                        sh "cat ${env.MAIL_CONFIG}"
-                        sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py downloadReFormat --path ../incoming --messageNumber ${params.messageNumber} --imapInbox ${params.INBOX}"
+                        dir("/var/jenkins_home/repos/main/mailer"){
+                        sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py downloadReFormat --path /var/jenkins_home/repos/${params.BRANCH_NAME}/incoming --messageNumber ${params.messageNumber} --imapInbox ${params.INBOX}"
+                        }
                     }
                 }
             }

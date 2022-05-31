@@ -55,8 +55,10 @@ pipeline {
     }
     post {
         success {
-            ws("/var/jenkins_home/repos/main/mailer"){
-                sh "cd ${env.WORKSPACE} && ./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText '${params.BRANCH_NAME} Was Cloned or Updated Successfully'"
+            ws("/var/jenkins_home/repos/main/"){
+                dir ("mailer") {
+                    sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText '${params.BRANCH_NAME} Was Cloned or Updated Successfully'"
+                }
             }
         }
 

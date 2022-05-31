@@ -36,7 +36,7 @@ pipeline {
             steps {
                 dir('mailer') {
                     script {
-                        sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText '${params.BRANCH_NAME} Was Cloned or Updated Successfully'"
+                        sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText '${params.message}'"
                     }
                 }
             }

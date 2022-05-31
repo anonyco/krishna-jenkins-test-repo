@@ -6,6 +6,8 @@ then
   exit 1
 fi
 
+echo "Entered the Script"
+
 SMTP_FILE=$1
 shift
 SCRIPT=$1

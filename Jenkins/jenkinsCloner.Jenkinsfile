@@ -39,14 +39,24 @@ pipeline {
                                     sh "git clone -b ${params.BRANCH_NAME} 'https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo' ${params.BRANCH_NAME}"
                                 }
                             }
-                            dir("/var/jenkins_home/repos/main/mailer"){
-                                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText '${params.BRANCH_NAME} Was Cloned or Updated Successfully'"
-                            }
+                            build job: "report", propagate: true, wait: true, parameters: [
+                                        string(name: "INBOX", value: "${params.INBOX}"),
+                                        string(name: "messageNumber", value: "${params.messageNumber}")
+                                        string(name: "task", value: "update")
+                                        string(name: "message", value: "${params.BRANCH_NAME} Was Cloned or Updated Successfully")
+                                        ]
                         } catch (Exception e) {
-                            dir("/var/jenkins_home/repos/main/mailer"){
-                                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText \"Cloning ${params.BRANCH_NAME} Failed\""
-                                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py send --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber}"
-                            }
+                            build job: "report", propagate: true, wait: true, parameters: [
+                                        string(name: "INBOX", value: "${params.INBOX}"),
+                                        string(name: "messageNumber", value: "${params.messageNumber}")
+                                        string(name: "task", value: "update")
+                                        string(name: "message", value: "Cloning ${params.BRANCH_NAME} Failed")
+                                        ]
+                            build job: "report", propagate: true, wait: true, parameters: [
+                                        string(name: "INBOX", value: "${params.INBOX}"),
+                                        string(name: "messageNumber", value: "${params.messageNumber}")
+                                        string(name: "task", value: "send")
+                                        ]
                             error e
                         }
 
@@ -58,8 +68,8 @@ pipeline {
             steps {
                 build job: "patchBranch", propagate: false, wait: false, parameters: [
                             gitParameter(name: "BRANCH_NAME", value: "${params.BRANCH_NAME}"),
-			    string(name: "INBOX", value: "${params.INBOX}"),
-			    string(name: "messageNumber", value: "${params.messageNumber}")
+                            string(name: "INBOX", value: "${params.INBOX}"),
+                            string(name: "messageNumber", value: "${params.messageNumber}")
                             ]
 
             }

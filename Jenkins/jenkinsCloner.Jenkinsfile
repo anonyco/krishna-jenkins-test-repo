@@ -51,12 +51,17 @@ pipeline {
         }
     }
     post {
-        failure {
-            emailext body: " - Build # $BUILD_NUMBER - :\n\nCheck console output at $BUILD_URL to view the results.", to: "${commiter}", subject: 'Failure'
+        success {
+            dir("/var/jenkins_home/repos/main/mailer"){
+                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText \"${params.BRANCH_NAME} Was Cloned or Updated Successfully\""
+            }
         }
 
-        success {
-            emailext body: " - Build # $BUILD_NUMBER - :\n\nCheck console output at $BUILD_URL to view the results.", to: "${commiter}", subject: 'Success'
+        failure {
+            dir("/var/jenkins_home/repos/main/mailer"){
+                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText \"Cloning ${params.BRANCH_NAME} Failed\""
+                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py send --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber}"
+            }
         }
     }
 }

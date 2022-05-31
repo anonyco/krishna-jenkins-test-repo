@@ -53,14 +53,14 @@ pipeline {
     post {
         success {
             ws("/var/jenkins_home/repos/main/mailer"){
-                sh "/var/jenkins_home/repos/main/mailer/mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText \"${params.BRANCH_NAME} Was Cloned or Updated Successfully\""
+                sh "pwd && ls && ./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText \"${params.BRANCH_NAME} Was Cloned or Updated Successfully\""
             }
         }
 
         failure {
             dir("/var/jenkins_home/repos/main/mailer"){
-                sh "/var/jenkins_home/repos/main/mailer/mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText \"Cloning ${params.BRANCH_NAME} Failed\""
-                sh "/var/jenkins_home/repos/main/mailer/mailCredsLoader.sh ${env.MAIL_CONFIG} report.py send --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber}"
+                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py update --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber} --updateWithText \"Cloning ${params.BRANCH_NAME} Failed\""
+                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py send --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber}"
             }
         }
     }

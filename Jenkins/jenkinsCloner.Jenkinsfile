@@ -13,6 +13,9 @@ pipeline {
         string name: "messageNumber"
         string name: "INBOX"
     }
+    environment {
+        MAIL_CONFIG = credentials('smtp')
+    }
     stages {
         stage('clone') {
             steps {

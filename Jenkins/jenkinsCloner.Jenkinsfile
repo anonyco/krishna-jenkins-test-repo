@@ -41,20 +41,20 @@ pipeline {
                             }
                             build job: "report", propagate: true, wait: true, parameters: [
                                         string(name: "INBOX", value: "${params.INBOX}"),
-                                        string(name: "messageNumber", value: "${params.messageNumber}")
-                                        string(name: "task", value: "update")
+                                        string(name: "messageNumber", value: "${params.messageNumber}"),
+                                        string(name: "task", value: "update"),
                                         string(name: "message", value: "${params.BRANCH_NAME} Was Cloned or Updated Successfully")
                                         ]
                         } catch (Exception e) {
                             build job: "report", propagate: true, wait: true, parameters: [
                                         string(name: "INBOX", value: "${params.INBOX}"),
-                                        string(name: "messageNumber", value: "${params.messageNumber}")
-                                        string(name: "task", value: "update")
+                                        string(name: "messageNumber", value: "${params.messageNumber}"),
+                                        string(name: "task", value: "update"),
                                         string(name: "message", value: "Cloning ${params.BRANCH_NAME} Failed")
                                         ]
                             build job: "report", propagate: true, wait: true, parameters: [
                                         string(name: "INBOX", value: "${params.INBOX}"),
-                                        string(name: "messageNumber", value: "${params.messageNumber}")
+                                        string(name: "messageNumber", value: "${params.messageNumber}"),
                                         string(name: "task", value: "send")
                                         ]
                             error e

@@ -80,8 +80,13 @@ def downloadPatchMail(args):
         writeMessageToFile(path, mail)
         messageNumbers = imap.search(None,'HEADER', 'In-Reply-To', messageId)
         messageNumbers = messageNumbers[1][0].decode('utf-8').split()
+        if len(messageNumbers) > totalPatchCount:
+            print(f"Found {len(messageNumbers)} instead of in the chain, probably because this is a rerun of the Original Patch, will be filtering mails")
         for messageNumber in messageNumbers:
             mail = getEmail(args, args.imapInbox, messageNumber)
+            if not mail['Subject'].startswith("[PATCH "):
+                print(f"ignoring mail with subject \"{mail['Subject']}\"")
+                continue
             writeMessageToFile(path,mail)
 
 

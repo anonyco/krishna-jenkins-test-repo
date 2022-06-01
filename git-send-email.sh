@@ -6,6 +6,5 @@ echo "Branch is behing origin by $commitCount commits"
 echo "Pushing $commitCount commits to Build server"
 git format-patch -o outgoing/ -$commitCount
 
-# format the subject
-
-# git send-email
+python mailer/mailer.py patchFormatter --path outgoing/ --branch $currentBranch
+git send-email --to="krishna@git.rightend.com" outgoing/*

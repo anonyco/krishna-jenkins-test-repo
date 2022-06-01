@@ -46,7 +46,6 @@ def send(args):
     mail.add_header("To", sourceMail['From'])
     mail.add_header('From', args.smtpUser)
     mail['Subject']=f"Report for Patch Request {sourceMail['Subject']}"
-    print(mail)
     sendEmail(args, mail)
     deleteDraft(imap, id)
 

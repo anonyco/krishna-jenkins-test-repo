@@ -48,9 +48,8 @@ def send(args):
     mail['Subject']=f"Report for Patch Request {sourceMail['Subject']}"
     print(mail)
     sendEmail(args, mail)
+    deleteDraft(imap, id)
 
-    # deleteDraft(imap, id)
-    
 
 createSubparser(subparser, send, ["imapServer", "imapPort", "imapUser", "imapPassword", "reportForMailInBox", "reportForMailNumber", "smtpServer", "smtpPort", "smtpUser", "smtpPassword"])
 

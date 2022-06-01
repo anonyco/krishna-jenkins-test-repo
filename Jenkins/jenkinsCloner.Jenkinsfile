@@ -59,7 +59,6 @@ pipeline {
                                         ]
                             error e
                         }
-
                     }
                 }
             }

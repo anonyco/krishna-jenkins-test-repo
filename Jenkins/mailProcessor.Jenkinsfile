@@ -31,19 +31,29 @@ pipeline {
                 dir('mailer') {
                     script {
                         branchName = sh(script:"./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py checkMailForBranch --imapInbox ${params.INBOX} --messageNumber ${params.messageNumber}", returnStdout:true).trim()
+                        build job: "report", propagate: true, wait: true, parameters: [
+                                    string(name: "INBOX", value: "${params.INBOX}"),
+                                    string(name: "messageNumber", value: "${params.messageNumber}"),
+                                    string(name: "task", value: "create")
+                                    ]
                         if (branchName != "main") {
-                            dir("/var/jenkins_home/repos/main/mailer"){
-                                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} report.py create --reportForMailInBox ${params.INBOX} --reportForMailNumber ${params.messageNumber}"
-                            }
                             build job: "jenkins_cloner", propagate: false, wait: false, parameters: [
                                 gitParameter(name: "BRANCH_NAME", value: "${branchName}"),
                                 string(name: "INBOX", value: "${params.INBOX}"),
                                 string(name: "messageNumber", value: "${params.messageNumber}")
                                 ]
                         } else {
-                            dir("/var/jenkins_home/repos/main/mailer"){
-                                sh "./mailCredsLoader.sh ${env.MAIL_CONFIG} mailer.py patchRejectionForBranch --imapInbox ${params.INBOX} --messageNumber ${params.messageNumber}"
-                            }
+                            build job: "report", propagate: true, wait: true, parameters: [
+                                        string(name: "INBOX", value: "${params.INBOX}"),
+                                        string(name: "messageNumber", value: "${params.messageNumber}"),
+                                        string(name: "task", value: "update"),
+                                        string(name: "message", value: "Patch Rejected, \r\n Reason: Main is a Restricted Branch")
+                                        ]
+                            build job: "report", propagate: true, wait: true, parameters: [
+                                        string(name: "INBOX", value: "${params.INBOX}"),
+                                        string(name: "messageNumber", value: "${params.messageNumber}"),
+                                        string(name: "task", value: "send")
+                                        ]
                         }
                     }
                 }

@@ -36,7 +36,27 @@ pipeline {
                             else {
                                 echo "folder not found, cloning it"
                                 withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
-                                    sh "git clone -b ${params.BRANCH_NAME} 'https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo' ${params.BRANCH_NAME}"
+                                    try {
+                                        sh "git clone -b ${params.BRANCH_NAME} 'https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo' ${params.BRANCH_NAME}"
+                                    } catch (Exception e) {
+                                        statusCode = sh script:"git ls-remote --heads --exit-code https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo ${params.BRANCH_NAME}", returnStatus:true
+                                        if (statusCode==0){
+                                            build job: "report", propagate: true, wait: true, parameters: [
+                                                        string(name: "INBOX", value: "${params.INBOX}"),
+                                                        string(name: "messageNumber", value: "${params.messageNumber}"),
+                                                        string(name: "task", value: "update"),
+                                                        string(name: "message", value: "${params.BRANCH_NAME} was Found But Couldnot be cloned")
+                                                        ]
+                                        } else {
+                                            build job: "report", propagate: true, wait: true, parameters: [
+                                                        string(name: "INBOX", value: "${params.INBOX}"),
+                                                        string(name: "messageNumber", value: "${params.messageNumber}"),
+                                                        string(name: "task", value: "update"),
+                                                        string(name: "message", value: "${params.BRANCH_NAME} was Not Found, Please Check with Someone on How to clone it")
+                                                        ]
+                                        }
+                                        error e
+                                    }
                                 }
                             }
                             build job: "report", propagate: true, wait: true, parameters: [
@@ -70,7 +90,6 @@ pipeline {
                             string(name: "INBOX", value: "${params.INBOX}"),
                             string(name: "messageNumber", value: "${params.messageNumber}")
                             ]
-
             }
         }
     }

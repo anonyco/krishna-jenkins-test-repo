@@ -36,12 +36,19 @@ pipeline {
                                     string(name: "messageNumber", value: "${params.messageNumber}"),
                                     string(name: "task", value: "create")
                                     ]
+                        echo "${branchName}"
                         if (branchName != "main") {
                             build job: "jenkins_cloner", propagate: false, wait: false, parameters: [
                                 gitParameter(name: "BRANCH_NAME", value: "${branchName}"),
                                 string(name: "INBOX", value: "${params.INBOX}"),
                                 string(name: "messageNumber", value: "${params.messageNumber}")
                                 ]
+                            build job: "report", propagate: true, wait: true, parameters: [
+                                        string(name: "INBOX", value: "${params.INBOX}"),
+                                        string(name: "messageNumber", value: "${params.messageNumber}"),
+                                        string(name: "task", value: "update"),
+                                        string(name: "message", value: "Patch Accepted")
+                                        ]
                         } else {
                             build job: "report", propagate: true, wait: true, parameters: [
                                         string(name: "INBOX", value: "${params.INBOX}"),

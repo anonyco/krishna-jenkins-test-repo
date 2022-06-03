@@ -37,14 +37,14 @@ pipeline {
                                     ]
                         if (branchName != "main") {
                             withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
-                                statusCode = sh script:"git ls-remote --heads --exit-code https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo ${params.BRANCH_NAME}", returnStatus:true
+                                statusCode = sh script:"git ls-remote --heads --exit-code https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo ${branchName}", returnStatus:true
                             }
                             if (statusCode==0){
                                 build job: "report", propagate: true, wait: true, parameters: [
                                             string(name: "INBOX", value: "${params.INBOX}"),
                                             string(name: "messageNumber", value: "${params.messageNumber}"),
                                             string(name: "task", value: "update"),
-                                            string(name: "message", value: "Branch: '${params.BRANCH_NAME}' Found in Remote Git repo, And is not a Restricted Branch, so Accepting the Patch Request")
+                                            string(name: "message", value: "Branch: '${branchName}' Found in Remote Git repo, And is not a Restricted Branch, so Accepting the Patch Request")
                                             ]
                                 build job: "jenkins_cloner", propagate: false, wait: false, parameters: [
                                     gitParameter(name: "BRANCH_NAME", value: "${branchName}"),
@@ -56,7 +56,7 @@ pipeline {
                                             string(name: "INBOX", value: "${params.INBOX}"),
                                             string(name: "messageNumber", value: "${params.messageNumber}"),
                                             string(name: "task", value: "update"),
-                                            string(name: "message", value: "Your Pull Request Referenced Commit's in Branch: '${params.BRANCH_NAME}', Which Does not exist in the Git Server Copy, Please Check Example.com on How to Create New Branches for this Repo")
+                                            string(name: "message", value: "Your Pull Request Referenced Commit's in Branch: '${branchName}', Which Does not exist in the Git Server Copy, Please Check Example.com on How to Create New Branches for this Repo")
                                             ]
                                 build job: "report", propagate: true, wait: true, parameters: [
                                             string(name: "INBOX", value: "${params.INBOX}"),

@@ -39,22 +39,12 @@ pipeline {
                                     try {
                                         sh "git clone -b ${params.BRANCH_NAME} 'https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo' ${params.BRANCH_NAME}"
                                     } catch (Exception e) {
-                                        statusCode = sh script:"git ls-remote --heads --exit-code https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo ${params.BRANCH_NAME}", returnStatus:true
-                                        if (statusCode==0){
-                                            build job: "report", propagate: true, wait: true, parameters: [
-                                                        string(name: "INBOX", value: "${params.INBOX}"),
-                                                        string(name: "messageNumber", value: "${params.messageNumber}"),
-                                                        string(name: "task", value: "update"),
-                                                        string(name: "message", value: "${params.BRANCH_NAME} was Found But Couldnot be cloned because of some Error.\n Error :${e}\nPlease Contact Someone to get it resolved")
-                                                        ]
-                                        } else {
-                                            build job: "report", propagate: true, wait: true, parameters: [
-                                                        string(name: "INBOX", value: "${params.INBOX}"),
-                                                        string(name: "messageNumber", value: "${params.messageNumber}"),
-                                                        string(name: "task", value: "update"),
-                                                        string(name: "message", value: "Your Pull Request Referenced Commit's in Branch: '${params.BRANCH_NAME}', Which Does not exist in the Git Server Copy, Please Check Example.com on How to Create New Branches for this Repo")
-                                                        ]
-                                        }
+                                        build job: "report", propagate: true, wait: true, parameters: [
+                                                    string(name: "INBOX", value: "${params.INBOX}"),
+                                                    string(name: "messageNumber", value: "${params.messageNumber}"),
+                                                    string(name: "task", value: "update"),
+                                                    string(name: "message", value: "Brach: '${params.BRANCH_NAME}' was Found in Remote Repository, But Couldnot be cloned because of an Error.\n Error :${e}\nPlease Contact Someone to get it resolved")
+                                                    ]
                                         error e
                                     }
                                 }

@@ -12,6 +12,7 @@ pipeline {
         string name: 'messageNumber'
         string name: 'task'
         string name: 'message'
+        File name: 'messageFile'
     }
     environment {
         MAIL_CONFIG = credentials('smtp')

@@ -39,12 +39,14 @@ pipeline {
                             withCredentials([usernameColonPassword(credentialsId: 'github', variable: 'GIT_CREDS')]) {
                                 statusCode = sh script:"git ls-remote --heads --exit-code https://${GIT_CREDS}@github.com/anonyco/krishna-jenkins-test-repo ${branchName}", returnStatus:true
                             }
+                            sh "printenv"
                             if (statusCode==0){
                                 build job: "report", propagate: true, wait: true, parameters: [
                                             string(name: "INBOX", value: "${params.INBOX}"),
                                             string(name: "messageNumber", value: "${params.messageNumber}"),
                                             string(name: "task", value: "update"),
-                                            string(name: "message", value: "Branch: '${branchName}' Found in Remote Git repo, And is not a Restricted Branch, so Accepting the Patch Request")
+                                            string(name: "message", value: "${path}")
+                                            //"Branch: '${branchName}' Found in Remote Git repo, And is not a Restricted Branch, so Accepting the Patch Request"
                                             ]
                                 build job: "jenkins_cloner", propagate: false, wait: false, parameters: [
                                     gitParameter(name: "BRANCH_NAME", value: "${branchName}"),

@@ -19,10 +19,12 @@ def regexListMatch(regexList, string):
             return x
     return False
 
-def createSubparser(subparser, func, argList):
+def createSubparser(subparser, func, argList, optionalArgList=[]):
     parser = subparser.add_parser(func.__name__)
     for arg in argList:
         parser.add_argument(f"--{arg}", required=True)
+    for arg in optionalArgList:
+        parser.add_argument(f"--{arg}")
     parser.set_defaults(func=func)
 
 def getTLSContext():
